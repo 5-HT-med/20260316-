@@ -1,0 +1,2981 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鹤护健康2026工作汇报</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  :root {
+    --green-dark: #1a6b4a;
+    --green-mid: #2d8c60;
+    --green-light: #5ab08a;
+    --green-pale: #c8e8d8;
+    --green-bg: #e8f5ee;
+    --mint-light: #d4ede3;
+    --gold: #d4a017;
+    --gold-light: #f0c040;
+    --white: #ffffff;
+    --text-dark: #1a3a2a;
+    --text-mid: #2d5a3a;
+    --gray-light: #f5faf7;
+    --orange: #e8841a;
+  }
+
+  body {
+    font-family: 'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', sans-serif;
+    background: #f0f0f0;
+    color: var(--text-dark);
+  }
+
+  /* Navigation */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: rgba(26,107,74,0.95);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .nav-title { color: white; font-size: 14px; font-weight: 600; }
+  .nav-controls { display: flex; align-items: center; gap: 10px; }
+  .nav-btn {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    padding: 5px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.35); }
+  .slide-counter { color: rgba(255,255,255,0.8); font-size: 13px; }
+
+  /* Slide container */
+  .slides-wrapper {
+    padding: 50px 0 0;
+    min-height: calc(100vh - 50px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  
+  .slides-container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    aspect-ratio: 16/9;
+    position: relative;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.15);
+  }
+  .slide {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    background: white;
+    transition: opacity 0.25s ease;
+    z-index: 1;
+  }
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+    z-index: 2;
+  }
+  .section-divider-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #slide-final {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Slide number badge */
+  .slide-num {
+    position: absolute;
+    bottom: 14px;
+    right: 20px;
+    font-size: 11px;
+    color: rgba(26,107,74,0.5);
+    font-weight: 500;
+    z-index: 10;
+  }
+
+  /* ============================================
+     BACKGROUND DECORATIONS (reusable)
+  ============================================ */
+
+  /* Mountain/landscape background */
+  .bg-landscape {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 45%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Top gradient overlay */
+  .bg-gradient-top {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 100%;
+    background: linear-gradient(160deg, #e8f5ee 0%, #f0faf5 40%, #fafffe 70%);
+    z-index: 0;
+  }
+
+  /* Logo top-right */
+
+  /* Footer slogan */
+  .footer-slogan {
+    position: absolute;
+    bottom: 12px;
+    right: 60px;
+    font-size: 10px;
+    color: var(--green-dark);
+    z-index: 10;
+    display: flex;
+    gap: 10px;
+  }
+  .footer-slogan span:first-child { color: var(--green-dark); }
+  .footer-slogan span:last-child { color: var(--gold); }
+
+  /* Page title bar */
+  .page-title-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    z-index: 5;
+    padding: 0 16px;
+    background: linear-gradient(90deg, rgba(26,107,74,0.12) 0%, transparent 80%);
+    border-bottom: 1.5px solid rgba(26,107,74,0.15);
+  }
+  .page-title-tag {
+    background: var(--green-pale);
+    border-left: 4px solid var(--green-dark);
+    padding: 6px 14px 6px 10px;
+    font-size: 13px;
+    color: var(--green-dark);
+    font-weight: 600;
+    clip-path: polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%);
+    padding-right: 20px;
+  }
+  .page-title-main {
+    margin-left: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--green-dark);
+  }
+
+  /* Section divider accent */
+  .accent-bar {
+    width: 40px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--green-dark), var(--green-light));
+    border-radius: 2px;
+    margin: 6px 0 12px;
+  }
+
+  /* Info card */
+  .info-card {
+    background: white;
+    border: 1px solid var(--green-pale);
+    border-radius: 8px;
+    padding: 12px 14px;
+    box-shadow: 0 2px 8px rgba(26,107,74,0.08);
+  }
+
+  /* Tag label */
+  .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tag-green { background: var(--green-pale); color: var(--green-dark); }
+  .tag-gold { background: #fef3d0; color: #8a6010; }
+  .tag-orange { background: #fde8cc; color: #a05010; }
+
+  /* Number circle */
+  .num-circle {
+    width: 36px; height: 36px;
+    background: var(--green-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    font-style: italic;
+    flex-shrink: 0;
+  }
+
+  /* ============================================
+     SLIDE 1 — COVER
+  ============================================ */
+  #slide-1 {
+    background: linear-gradient(160deg, #ddf0e6 0%, #edf8f2 50%, #f8fffe 100%);
+  }
+  #slide-1 .cover-city {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 55%;
+    height: 48%;
+    z-index: 2;
+    background: 
+      /* Buildings */
+      linear-gradient(180deg, transparent 0%, #2d8c60 100%) 0 0 / 100% 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+  }
+  #slide-1 .cover-mountains {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 45%;
+    height: 50%;
+    z-index: 1;
+  }
+  #slide-1 .main-title {
+    position: absolute;
+    top: 38%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 5;
+    width: 70%;
+  }
+  #slide-1 .main-title h1 {
+    font-size: 3.2vw;
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.3;
+    letter-spacing: 2px;
+  }
+  #slide-1 .main-title .date {
+    margin-top: 2.5vw;
+    font-size: 1.4vw;
+    font-weight: 600;
+    color: var(--text-mid);
+    letter-spacing: 3px;
+  }
+
+  /* ============================================
+     SLIDE 2 — TABLE OF CONTENTS
+  ============================================ */
+  #slide-2 {
+    background: linear-gradient(160deg, #d8eee2 0%, #edf8f2 50%, #f5fffe 100%);
+  }
+  #slide-2 .contents-title {
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    z-index: 5;
+  }
+  #slide-2 .contents-title h2 {
+    font-size: 4.5vw;
+    font-weight: 700;
+    color: var(--green-dark);
+    line-height: 1.1;
+  }
+  #slide-2 .contents-title .subtitle {
+    font-size: 2vw;
+    color: var(--green-light);
+    letter-spacing: 3px;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  #slide-2 .contents-list {
+    position: absolute;
+    right: 8%;
+    top: 15%;
+    width: 50%;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+  }
+  #slide-2 .cont-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(255,255,255,0.6);
+    border: 1px solid rgba(26,107,74,0.2);
+    border-radius: 6px;
+    padding: 10px 16px;
+    clip-path: polygon(0 0, 95% 0, 100% 50%, 95% 100%, 0 100%);
+    padding-right: 40px;
+  }
+  #slide-2 .cont-num {
+    font-size: 2.2vw;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--green-dark);
+    width: 2.5vw;
+    flex-shrink: 0;
+  }
+  #slide-2 .cont-text {
+    font-size: 1.2vw;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+
+  /* ============================================
+     SLIDE 3 — OVERVIEW
+  ============================================ */
+  #slide-3 {
+    background: linear-gradient(160deg, #ddf0e6 0%, #f0faf5 60%, white 100%);
+  }
+  #slide-3 .overview-content {
+    position: absolute;
+    top: 16%;
+    left: 5%;
+    right: 5%;
+    bottom: 12%;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  #slide-3 .big-title {
+    font-size: 2.8vw;
+    font-weight: 700;
+    color: var(--green-dark);
+    text-align: center;
+    margin-bottom: 3vh;
+  }
+  #slide-3 .four-boxes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5vw;
+    width: 100%;
+  }
+  #slide-3 .box {
+    background: white;
+    border: 1.5px solid var(--green-pale);
+    border-radius: 10px;
+    padding: 1.5vw;
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(26,107,74,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  #slide-3 .box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--green-dark), var(--green-light));
+  }
+  #slide-3 .box-num {
+    font-size: 2.5vw;
+    font-weight: 700;
+    color: var(--green-dark);
+    font-style: italic;
+  }
+  #slide-3 .box-label {
+    font-size: 0.9vw;
+    color: var(--text-mid);
+    margin-top: 0.5vh;
+    font-weight: 600;
+  }
+  #slide-3 .box-desc {
+    font-size: 0.75vw;
+    color: #666;
+    margin-top: 0.5vh;
+  }
+
+  /* ============================================
+     SHARED CONTENT SLIDE STYLES
+  ============================================ */
+  .content-slide {
+    background: white;
+  }
+  .content-slide .bg-top-strip {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 58px;
+    background: linear-gradient(90deg, var(--green-dark) 0%, #2d8c60 100%);
+    z-index: 3;
+  }
+  .content-slide .slide-header {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 5;
+  }
+  .content-slide .slide-header .breadcrumb {
+    color: rgba(255,255,255,0.75);
+    font-size: 11px;
+  }
+  .content-slide .slide-header .slide-title {
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    margin-left: 10px;
+  }
+  .content-slide .slide-header .sep {
+    color: rgba(255,255,255,0.5);
+    margin: 0 6px;
+  }
+  
+  
+  .content-slide .body {
+    position: absolute;
+    top: 64px; left: 18px; right: 18px; bottom: 28px;
+    overflow: hidden;
+    z-index: 5;
+  }
+
+  /* Content blocks */
+  .section-title {
+    font-size: 1.3vw;
+    font-weight: 700;
+    color: var(--green-dark);
+    margin-bottom: 0.5vh;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 1.4em;
+    background: var(--green-dark);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .bullet-list li {
+    padding: 3px 0 3px 14px;
+    font-size: 0.85vw;
+    color: var(--text-dark);
+    line-height: 1.5;
+    position: relative;
+  }
+  .bullet-list li::before {
+    content: '●';
+    position: absolute;
+    left: 0;
+    color: var(--green-light);
+    font-size: 7px;
+    top: 6px;
+  }
+
+  .sub-bullet-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .sub-bullet-list li {
+    padding: 2px 0 2px 20px;
+    font-size: 0.78vw;
+    color: #444;
+    line-height: 1.4;
+    position: relative;
+  }
+  .sub-bullet-list li::before {
+    content: '—';
+    position: absolute;
+    left: 6px;
+    color: var(--green-light);
+    font-size: 10px;
+    top: 2px;
+  }
+
+  .difficulty-box {
+    background: #fff8e8;
+    border-left: 3px solid var(--gold);
+    border-radius: 0 6px 6px 0;
+    padding: 5px 10px;
+    margin: 4px 0;
+    font-size: 0.8vw;
+    color: #6b4c10;
+  }
+  .difficulty-box strong { color: var(--gold); }
+
+  .action-box {
+    background: #e8f5ee;
+    border-left: 3px solid var(--green-dark);
+    border-radius: 0 6px 6px 0;
+    padding: 5px 10px;
+    margin: 4px 0;
+    font-size: 0.8vw;
+    color: var(--text-mid);
+  }
+  .action-box strong { color: var(--green-dark); }
+
+  .support-box {
+    position: absolute;
+    bottom: 0; right: 0;
+    background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+    color: white;
+    border-radius: 8px 8px 0 0;
+    padding: 8px 16px;
+    font-size: 0.78vw;
+    max-width: 240px;
+  }
+  .support-box strong { font-size: 0.85vw; display: block; margin-bottom: 2px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2vw; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1vw; }
+  .two-col-3-7 { display: grid; grid-template-columns: 3fr 7fr; gap: 1.2vw; }
+
+  .card {
+    background: var(--gray-light);
+    border: 1px solid var(--mint-light);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .card-title {
+    font-size: 0.9vw;
+    font-weight: 700;
+    color: var(--green-dark);
+    margin-bottom: 6px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--green-pale);
+  }
+  .card-body { font-size: 0.78vw; color: #444; line-height: 1.5; }
+
+  .step-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .step-num {
+    background: var(--green-dark);
+    color: white;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-content { font-size: 0.82vw; color: var(--text-dark); line-height: 1.5; }
+  .step-content strong { color: var(--green-dark); }
+
+  .highlight-tag {
+    display: inline-block;
+    background: var(--green-dark);
+    color: white;
+    border-radius: 4px;
+    padding: 1px 7px;
+    font-size: 0.75vw;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+  .highlight-tag.gold { background: var(--gold); }
+  .highlight-tag.orange { background: var(--orange); }
+
+  .compliance-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+    align-items: flex-start;
+  }
+  .compliance-icon {
+    width: 24px; height: 24px;
+    background: var(--green-pale);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  /* ============================================
+     SLIDE 4-5 SPECIFIC
+  ============================================ */
+  .pathway-row {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+    background: white;
+    border: 1px solid var(--green-pale);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .pathway-label {
+    background: var(--green-dark);
+    color: white;
+    padding: 8px 10px;
+    font-size: 0.78vw;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 70px;
+    text-align: center;
+  }
+  .pathway-label.yellow { background: #d4a017; }
+  .pathway-label.red { background: #c03030; }
+  .pathway-content {
+    padding: 8px 12px;
+    font-size: 0.78vw;
+    color: var(--text-dark);
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  /* ============================================
+     AI SLIDES
+  ============================================ */
+  .ai-ring {
+    border: 2px solid var(--green-pale);
+    border-radius: 12px;
+    padding: 10px 12px;
+    position: relative;
+    background: white;
+  }
+  .ai-ring .ring-num {
+    position: absolute;
+    top: -12px; left: 12px;
+    background: var(--green-dark);
+    color: white;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .ai-ring .ring-title {
+    font-size: 0.9vw;
+    font-weight: 700;
+    color: var(--green-dark);
+    margin-bottom: 4px;
+    margin-top: 6px;
+  }
+  .ai-ring .ring-sub {
+    font-size: 0.75vw;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  /* ============================================
+     STRATEGIC GOAL SLIDES
+  ============================================ */
+  .strategy-card {
+    background: white;
+    border-radius: 10px;
+    border: 1.5px solid var(--green-pale);
+    padding: 10px 12px;
+    box-shadow: 0 2px 8px rgba(26,107,74,0.07);
+  }
+  .strategy-card .sc-title {
+    font-size: 1vw;
+    font-weight: 700;
+    color: var(--green-dark);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .strategy-card .sc-title .icon {
+    width: 20px; height: 20px;
+    background: var(--green-pale);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+
+  /* ============================================
+     SLIDE 12/13 SPECIFIC
+  ============================================ */
+  .section-divider-slide {
+    background: linear-gradient(160deg, var(--green-dark) 0%, #2d7a50 60%, #3d9060 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .section-divider-slide .div-content {
+    text-align: center;
+    z-index: 5;
+    position: relative;
+  }
+  .section-divider-slide .div-content h2 {
+    font-size: 3.5vw;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 4px;
+  }
+  .section-divider-slide .div-content p {
+    color: rgba(255,255,255,0.75);
+    font-size: 1.3vw;
+    margin-top: 12px;
+    letter-spacing: 2px;
+  }
+
+  /* ============================================
+     FINAL SLIDE
+  ============================================ */
+  #slide-final {
+    background: linear-gradient(160deg, #ddf0e6 0%, #edf8f2 50%, #f8fffe 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #slide-final .final-content {
+    text-align: center;
+    z-index: 5;
+    position: relative;
+  }
+  #slide-final .final-slogans {
+    display: flex;
+    gap: 3vw;
+    justify-content: center;
+    margin-bottom: 2vh;
+  }
+  #slide-final .slogan {
+    font-size: 1.8vw;
+    font-weight: 700;
+  }
+  #slide-final .slogan.green { color: var(--green-dark); }
+  #slide-final .slogan.gold { color: var(--gold); }
+  #slide-final .thanks {
+    font-size: 2.5vw;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: 6px;
+    border-top: 1px solid rgba(26,107,74,0.3);
+    border-bottom: 1px solid rgba(26,107,74,0.3);
+    padding: 10px 30px;
+    margin-top: 2vh;
+  }
+
+  /* Slide thumbnails */
+  .thumbnails {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(26,40,30,0.95);
+    padding: 8px 16px;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    z-index: 999;
+    transition: transform 0.3s;
+    transform: translateY(100%);
+  }
+  .thumbnails.show { transform: translateY(0); }
+  .thumb {
+    flex-shrink: 0;
+    width: 80px; height: 45px;
+    background: #2a3a2a;
+    border-radius: 3px;
+    border: 1px solid rgba(255,255,255,0.15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: rgba(255,255,255,0.5);
+    transition: border-color 0.2s;
+    text-align: center;
+    padding: 2px;
+  }
+  .thumb.active { border-color: var(--gold-light); color: white; }
+
+  /* Keyboard shortcut hint */
+  .hint {
+    position: fixed;
+    bottom: 60px; right: 20px;
+    background: rgba(0,0,0,0.6);
+    color: rgba(255,255,255,0.7);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    z-index: 998;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .hint.show { opacity: 1; }
+
+  /* Responsive for full-screen */
+  @media (max-width: 768px) {
+    .slide { aspect-ratio: 16/9; }
+  }
+
+  /* Print / export styles */
+  @media print {
+    .nav, .thumbnails, .hint { display: none; }
+    .slides-wrapper { padding-top: 0; }
+    .slides-container { position: static; height: auto; aspect-ratio: auto; }
+    .slide { position: static; opacity: 1 !important; pointer-events: all; height: auto; aspect-ratio: 16/9; page-break-after: always; max-width: 100%; }
+  }
+
+  /* ============================================================
+     EDIT MODE STYLES
+  ============================================================ */
+  body.edit-mode .nav { background: rgba(30,60,120,0.97); }
+
+  /* Toolbar */
+  #edit-toolbar {
+    display: none;
+    position: fixed;
+    top: 46px; left: 50%; transform: translateX(-50%);
+    background: #1e2a4a;
+    border-radius: 0 0 12px 12px;
+    padding: 6px 14px;
+    gap: 6px;
+    align-items: center;
+    z-index: 1100;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.35);
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 900px;
+    width: 95%;
+  }
+  body.edit-mode #edit-toolbar { display: flex; }
+
+  .tb-sep { width: 1px; height: 22px; background: rgba(255,255,255,0.2); margin: 0 2px; }
+  .tb-btn {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    white-space: nowrap;
+    transition: background 0.15s;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .tb-btn:hover { background: rgba(255,255,255,0.28); }
+  .tb-btn.active { background: rgba(100,180,255,0.35); border-color: rgba(100,180,255,0.6); }
+  .tb-label { color: rgba(255,255,255,0.5); font-size: 11px; }
+
+  select.tb-select {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: white;
+    padding: 3px 6px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    outline: none;
+  }
+  select.tb-select option { background: #1e2a4a; color: white; }
+
+  input.tb-color {
+    width: 28px; height: 24px;
+    border: none; border-radius: 4px;
+    cursor: pointer; padding: 0;
+    background: none;
+  }
+
+  /* Edit mode visual cues */
+  body.edit-mode .slide.active [data-editable]:hover,
+  body.edit-mode .slide.active [contenteditable]:hover {
+    outline: 2px dashed rgba(100,180,255,0.7);
+    outline-offset: 2px;
+    cursor: text;
+  }
+  body.edit-mode .slide.active [data-editable]:focus,
+  body.edit-mode .slide.active [contenteditable]:focus {
+    outline: 2px solid rgba(100,180,255,1);
+    outline-offset: 2px;
+  }
+
+  /* Draggable blocks */
+  body.edit-mode .slide.active [data-block] {
+    cursor: grab;
+    transition: box-shadow 0.15s;
+  }
+  body.edit-mode .slide.active [data-block]:hover {
+    box-shadow: 0 0 0 2px rgba(100,180,255,0.6), 0 4px 16px rgba(0,0,0,0.15);
+  }
+  body.edit-mode .slide.active [data-block].dragging {
+    cursor: grabbing;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+    opacity: 0.9;
+    z-index: 999;
+  }
+  body.edit-mode .slide.active [data-block].drag-over {
+    outline: 2px dashed rgba(255,180,50,0.8);
+  }
+
+  /* Block action bar */
+  .block-actions {
+    display: none;
+    position: absolute;
+    top: -28px; left: 0;
+    background: #1e2a4a;
+    border-radius: 6px 6px 0 0;
+    padding: 3px 6px;
+    gap: 4px;
+    z-index: 500;
+    white-space: nowrap;
+  }
+  body.edit-mode .slide.active [data-block]:hover > .block-actions,
+  body.edit-mode .slide.active [data-block]:focus-within > .block-actions {
+    display: flex;
+    align-items: center;
+  }
+  .block-action-btn {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    padding: 2px 7px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+  }
+  .block-action-btn:hover { background: rgba(255,255,255,0.3); }
+
+  /* Edit mode hint */
+  #edit-hint {
+    display: none;
+    position: fixed;
+    bottom: 70px; left: 50%; transform: translateX(-50%);
+    background: rgba(30,42,74,0.92);
+    color: rgba(255,255,255,0.85);
+    padding: 7px 18px;
+    border-radius: 20px;
+    font-size: 12px;
+    z-index: 990;
+    pointer-events: none;
+    gap: 16px;
+  }
+  body.edit-mode #edit-hint { display: flex; }
+
+  /* Resize handle for blocks */
+  body.edit-mode .slide.active [data-block] { position: relative; }
+  
+  /* Undo/redo indicator */
+  #undo-counter {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    min-width: 30px;
+    text-align: center;
+  }
+
+  /* Selection overlay */
+  .selected-block {
+    outline: 2px solid rgba(100,180,255,0.9) !important;
+    outline-offset: 2px;
+  }
+
+  /* Add block panel */
+  #add-panel {
+    display: none;
+    position: fixed;
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    background: #1a2240;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    padding: 20px;
+    z-index: 2000;
+    min-width: 320px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  #add-panel h3 { color: white; margin-bottom: 12px; font-size: 14px; }
+  #add-panel .block-type-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  }
+  .block-type-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 12px;
+    transition: background 0.15s;
+  }
+  .block-type-btn:hover { background: rgba(100,180,255,0.3); }
+  .block-type-btn .bt-icon { font-size: 20px; display: block; margin-bottom: 4px; }
+  #add-panel-close {
+    background: rgba(255,100,100,0.3);
+    border: none; color: white;
+    padding: 6px 14px; border-radius: 6px;
+    cursor: pointer; margin-top: 12px; width: 100%;
+    font-size: 12px;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<div class="nav">
+  <div class="nav-title">🏥 鹤护健康 2026 汇报</div>
+  <div class="nav-controls">
+    <button class="nav-btn" onclick="prevSlide()">◀ 上一页</button>
+    <span class="slide-counter" id="counter">1 / 16</span>
+    <button class="nav-btn" onclick="nextSlide()">下一页 ▶</button>
+    <button class="nav-btn" onclick="toggleThumbs()">≡ 幻灯片</button>
+    <button class="nav-btn" onclick="toggleEditMode()" id="edit-toggle-btn" style="background:rgba(100,180,255,0.2);border-color:rgba(100,180,255,0.5);">✏️ 编辑</button>
+  </div>
+</div>
+
+
+<!-- Edit Toolbar -->
+<div id="edit-toolbar">
+  <span class="tb-label">✏️ 编辑模式</span>
+  <div class="tb-sep"></div>
+
+  <!-- Text formatting -->
+  <button class="tb-btn" onclick="execFmt('bold')" title="加粗 Ctrl+B"><b>B</b></button>
+  <button class="tb-btn" onclick="execFmt('italic')" title="斜体 Ctrl+I"><i>I</i></button>
+  <button class="tb-btn" onclick="execFmt('underline')" title="下划线 Ctrl+U"><u>U</u></button>
+  <div class="tb-sep"></div>
+
+  <!-- Font size -->
+  <select class="tb-select" onchange="execFmt('fontSize', this.value)" title="字号">
+    <option value="">字号</option>
+    <option value="1">极小</option>
+    <option value="2">很小</option>
+    <option value="3">小</option>
+    <option value="4">正常</option>
+    <option value="5">大</option>
+    <option value="6">很大</option>
+    <option value="7">极大</option>
+  </select>
+  <div class="tb-sep"></div>
+
+  <!-- Text color -->
+  <span class="tb-label">字色</span>
+  <input type="color" class="tb-color" id="text-color-picker" value="#1a3a2a" onchange="execFmt('foreColor', this.value)" title="文字颜色"/>
+  <span class="tb-label">背景</span>
+  <input type="color" class="tb-color" id="bg-color-picker" value="#ffffff" onchange="execFmt('hiliteColor', this.value)" title="背景颜色"/>
+  <div class="tb-sep"></div>
+
+  <!-- Alignment -->
+  <button class="tb-btn" onclick="execFmt('justifyLeft')" title="左对齐">≡⬅</button>
+  <button class="tb-btn" onclick="execFmt('justifyCenter')" title="居中">≡⬛</button>
+  <button class="tb-btn" onclick="execFmt('justifyRight')" title="右对齐">≡➡</button>
+  <div class="tb-sep"></div>
+
+  <!-- Block ops -->
+  <button class="tb-btn" onclick="addBlock()" title="添加文本块">＋ 添加块</button>
+  <button class="tb-btn" onclick="deleteSelectedBlock()" title="删除选中块" style="color:#ff8080;">✕ 删除</button>
+  <div class="tb-sep"></div>
+
+  <!-- Undo/Redo -->
+  <button class="tb-btn" onclick="undoEdit()" title="撤销 Ctrl+Z">↩ 撤销</button>
+  <button class="tb-btn" onclick="redoEdit()" title="重做 Ctrl+Y">↪ 重做</button>
+  <span id="undo-counter"></span>
+  <div class="tb-sep"></div>
+
+  <!-- Save -->
+  <button class="tb-btn" onclick="saveHTML()" title="导出保存" style="background:rgba(80,200,120,0.25);border-color:rgba(80,200,120,0.5);">💾 导出</button>
+</div>
+
+<!-- Edit hint bar -->
+<div id="edit-hint">
+  <span>✏️ 点击文字直接编辑</span>
+  <span>⠿ 拖拽模块移动位置</span>
+  <span>🖱 右键模块更多操作</span>
+  <span>Ctrl+Z 撤销</span>
+</div>
+
+<!-- Add block panel -->
+<div id="add-panel">
+  <h3>➕ 添加新模块到当前页</h3>
+  <div class="block-type-grid">
+    <button class="block-type-btn" onclick="insertBlock('text')"><span class="bt-icon">📝</span>文本框</button>
+    <button class="block-type-btn" onclick="insertBlock('card')"><span class="bt-icon">🃏</span>信息卡片</button>
+    <button class="block-type-btn" onclick="insertBlock('title')"><span class="bt-icon">🔤</span>标题块</button>
+    <button class="block-type-btn" onclick="insertBlock('list')"><span class="bt-icon">📋</span>列表块</button>
+    <button class="block-type-btn" onclick="insertBlock('note')"><span class="bt-icon">💡</span>备注框</button>
+    <button class="block-type-btn" onclick="insertBlock('divider')"><span class="bt-icon">➖</span>分隔线</button>
+  </div>
+  <button id="add-panel-close" onclick="closeAddPanel()">取消</button>
+</div>
+
+<div class="slides-wrapper">
+<div class="slides-container">
+
+<!-- ============================================
+     SLIDE 1 — COVER
+============================================ -->
+<div class="slide active" id="slide-1">
+  <div class="bg-gradient-top"></div>
+  
+  <!-- Mountains SVG left -->
+  <svg viewBox="0 0 500 300" preserveAspectRatio="xMinYMax meet" style="position:absolute;bottom:0;left:0;width:42%;height:50%;z-index:1;">
+    <defs>
+      <linearGradient id="mg1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#5ab08a" stop-opacity="0.7"/>
+        <stop offset="100%" stop-color="#2d7a50" stop-opacity="0.9"/>
+      </linearGradient>
+      <linearGradient id="mg2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#7dc4a0" stop-opacity="0.5"/>
+        <stop offset="100%" stop-color="#3d9060" stop-opacity="0.7"/>
+      </linearGradient>
+      <linearGradient id="mg3" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#9dd4b4" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#4da070" stop-opacity="0.6"/>
+      </linearGradient>
+    </defs>
+    <!-- Background mountains -->
+    <path d="M0,300 L0,180 L60,100 L120,160 L180,80 L240,140 L300,60 L360,130 L420,90 L500,150 L500,300 Z" fill="url(#mg3)" opacity="0.6"/>
+    <!-- Mid mountains -->
+    <path d="M0,300 L0,200 L80,120 L140,180 L200,100 L280,160 L350,80 L430,150 L500,120 L500,300 Z" fill="url(#mg2)"/>
+    <!-- Front mountains -->
+    <path d="M0,300 L0,230 L100,150 L170,210 L240,140 L310,200 L400,140 L500,200 L500,300 Z" fill="url(#mg1)"/>
+    <!-- Gold accent lines -->
+    <path d="M60,150 Q80,130 100,150" stroke="#d4a017" stroke-width="1.5" fill="none" opacity="0.7"/>
+    <path d="M200,110 Q220,95 240,110" stroke="#d4a017" stroke-width="1.5" fill="none" opacity="0.7"/>
+    <!-- Water reflection -->
+    <rect x="0" y="265" width="500" height="35" fill="#a8d8c0" opacity="0.3"/>
+    <!-- Birds -->
+    <path d="M180,60 Q190,50 200,60 Q210,50 220,60" stroke="#2d7a50" stroke-width="2" fill="none" opacity="0.6"/>
+    <path d="M230,45 Q238,38 246,45 Q254,38 262,45" stroke="#2d7a50" stroke-width="1.5" fill="none" opacity="0.4"/>
+  </svg>
+  
+  <!-- City SVG right -->
+  <svg viewBox="0 0 600 320" preserveAspectRatio="xMaxYMax meet" style="position:absolute;bottom:0;right:0;width:55%;height:50%;z-index:2;">
+    <defs>
+      <linearGradient id="b1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2d8c60"/><stop offset="100%" stop-color="#1a5a3a"/></linearGradient>
+      <linearGradient id="b2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e8841a"/><stop offset="100%" stop-color="#b86010"/></linearGradient>
+      <linearGradient id="b3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3d9c70"/><stop offset="100%" stop-color="#2a6a48"/></linearGradient>
+      <linearGradient id="b4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e07030"/><stop offset="100%" stop-color="#a05020"/></linearGradient>
+    </defs>
+    <!-- Ground -->
+    <rect x="0" y="290" width="600" height="30" fill="#c8e8d0" opacity="0.5"/>
+    <!-- Main tall building center -->
+    <rect x="280" y="60" width="50" height="230" fill="url(#b1)"/>
+    <polygon points="280,60 305,20 330,60" fill="#1a6b4a"/>
+    <!-- Windows -->
+    <rect x="285" y="70" width="8" height="8" fill="#a8d8c0" opacity="0.6"/>
+    <rect x="297" y="70" width="8" height="8" fill="#a8d8c0" opacity="0.6"/>
+    <rect x="309" y="70" width="8" height="8" fill="#a8d8c0" opacity="0.6"/>
+    <rect x="285" y="85" width="8" height="8" fill="#a8d8c0" opacity="0.6"/>
+    <rect x="297" y="85" width="8" height="8" fill="#a8d8c0" opacity="0.6"/>
+    <rect x="309" y="85" width="8" height="8" fill="#a8d8c0" opacity="0.6"/>
+    <!-- Building 2 -->
+    <rect x="350" y="100" width="45" height="190" fill="url(#b3)"/>
+    <polygon points="350,100 372,70 395,100" fill="#2d7a50"/>
+    <!-- Building 3 (orange) -->
+    <rect x="415" y="130" width="40" height="160" fill="url(#b2)"/>
+    <!-- Building 4 -->
+    <rect x="470" y="110" width="35" height="180" fill="url(#b3)"/>
+    <!-- Building 5 (red-orange) -->
+    <rect x="520" y="150" width="30" height="140" fill="url(#b4)"/>
+    <!-- Building 6 left -->
+    <rect x="220" y="120" width="40" height="170" fill="url(#b3)"/>
+    <!-- Building 7 far left -->
+    <rect x="160" y="150" width="35" height="140" fill="url(#b1)"/>
+    <!-- CR Double Crane factory/HQ building -->
+    <rect x="100" y="190" width="130" height="100" fill="#2d8c60"/>
+    <rect x="110" y="185" width="20" height="15" fill="#1a6b4a"/>
+    <rect x="175" y="185" width="20" height="15" fill="#1a6b4a"/>
+    <!-- Sign -->
+    <rect x="130" y="210" width="70" height="25" fill="#1a5a3a"/>
+    <text x="165" y="227" text-anchor="middle" font-size="10" fill="white" font-family="Microsoft YaHei">华润双鹤</text>
+    <!-- Road -->
+    <rect x="0" y="290" width="600" height="8" fill="#b8d8c8" opacity="0.4"/>
+    <!-- Bridge -->
+    <path d="M0,300 Q300,280 600,300" stroke="#8fc8a8" stroke-width="6" fill="none" opacity="0.5"/>
+    <!-- Birds flying -->
+    <path d="M450,50 Q460,42 470,50 Q480,42 490,50" stroke="#2d7a50" stroke-width="2" fill="none" opacity="0.5"/>
+    <path d="M510,35 Q518,28 526,35" stroke="#2d7a50" stroke-width="1.5" fill="none" opacity="0.4"/>
+  </svg>
+  
+  <!-- Main title -->
+  <div id="s1-title" style="position:absolute;top:32%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:5;width:80%;">
+    <h1 style="font-size:3.2vw;font-weight:700;color:#1a3a2a;letter-spacing:3px;">鹤护健康 2026 工作汇报</h1>
+    <div style="margin-top:1.5vw;font-size:1.4vw;font-weight:600;color:#2d5a3a;letter-spacing:4px;">围绕四个方向展开</div>
+    <div style="display:flex;justify-content:center;gap:2vw;margin-top:1.5vw;flex-wrap:wrap;">
+      <div style="background:rgba(26,107,74,0.1);border:1px solid rgba(26,107,74,0.3);border-radius:8px;padding:0.6vw 1.2vw;font-size:0.9vw;color:#1a6b4a;font-weight:600;">1个战略目标</div>
+      <div style="background:rgba(26,107,74,0.1);border:1px solid rgba(26,107,74,0.3);border-radius:8px;padding:0.6vw 1.2vw;font-size:0.9vw;color:#1a6b4a;font-weight:600;">4个实现</div>
+      <div style="background:rgba(212,160,23,0.15);border:1px solid rgba(212,160,23,0.4);border-radius:8px;padding:0.6vw 1.2vw;font-size:0.9vw;color:#8a6010;font-weight:600;">3大指示</div>
+      <div style="background:rgba(26,107,74,0.1);border:1px solid rgba(26,107,74,0.3);border-radius:8px;padding:0.6vw 1.2vw;font-size:0.9vw;color:#1a6b4a;font-weight:600;">5个重点举措</div>
+    </div>
+    <div style="margin-top:2.5vw;font-size:1.2vw;font-weight:500;color:#2d5a3a;letter-spacing:3px;">2026年</div>
+  </div>
+  
+  <div class="slide-num">1</div>
+</div>
+
+<!-- ============================================
+     SLIDE 2 — TABLE OF CONTENTS
+============================================ -->
+<div class="slide" id="slide-2">
+  <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(160deg,#d8eee2 0%,#edf8f2 50%,#f5fffe 100%);"></div>
+  
+  <!-- Mountain decoration -->
+  <svg viewBox="0 0 400 280" preserveAspectRatio="xMinYMax meet" style="position:absolute;bottom:0;left:0;width:35%;height:55%;z-index:1;opacity:0.8;">
+    <defs>
+      <linearGradient id="cmg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5ab08a" stop-opacity="0.6"/><stop offset="100%" stop-color="#2d7a50" stop-opacity="0.9"/></linearGradient>
+    </defs>
+    <path d="M0,280 L0,180 L60,100 L120,160 L180,70 L250,140 L320,80 L400,150 L400,280 Z" fill="#7dc4a0" opacity="0.4"/>
+    <path d="M0,280 L0,200 L80,120 L150,180 L220,100 L300,170 L400,130 L400,280 Z" fill="url(#cmg)"/>
+    <path d="M80,155 Q100,135 120,155" stroke="#d4a017" stroke-width="1.5" fill="none"/>
+    <path d="M185,95 Q200,80 215,95" stroke="#d4a017" stroke-width="1" fill="none"/>
+    <rect x="0" y="255" width="400" height="25" fill="#a8d8c0" opacity="0.25"/>
+    <path d="M100,100 Q112,90 124,100 Q136,90 148,100" stroke="#2d7a50" stroke-width="2" fill="none" opacity="0.7"/>
+    <path d="M160,82 Q170,74 180,82" stroke="#2d7a50" stroke-width="1.5" fill="none" opacity="0.5"/>
+  </svg>
+  
+  <!-- Cranes decoration -->
+  <svg viewBox="0 0 200 200" style="position:absolute;left:22%;top:35%;width:12%;z-index:2;opacity:0.7;">
+    <g transform="translate(50,120)">
+      <ellipse cx="0" cy="-20" rx="20" ry="30" fill="#5ab08a" opacity="0.8"/>
+      <circle cx="0" cy="-55" r="12" fill="#5ab08a" opacity="0.8"/>
+      <line x1="0" y1="-55" x2="20" y2="-70" stroke="#5ab08a" stroke-width="2"/>
+      <line x1="0" y1="-10" x2="30" y2="10" stroke="#5ab08a" stroke-width="3"/>
+      <line x1="0" y1="-10" x2="-30" y2="10" stroke="#5ab08a" stroke-width="3"/>
+      <line x1="0" y1="10" x2="-10" y2="40" stroke="#5ab08a" stroke-width="2.5"/>
+      <line x1="0" y1="10" x2="10" y2="40" stroke="#5ab08a" stroke-width="2.5"/>
+    </g>
+    <g transform="translate(110,100) scale(0.75)">
+      <ellipse cx="0" cy="-20" rx="18" ry="28" fill="#3d9060" opacity="0.7"/>
+      <circle cx="0" cy="-52" r="10" fill="#3d9060" opacity="0.7"/>
+      <line x1="0" y1="-52" x2="18" y2="-65" stroke="#3d9060" stroke-width="2"/>
+      <line x1="0" y1="-8" x2="28" y2="8" stroke="#3d9060" stroke-width="2.5"/>
+      <line x1="0" y1="-8" x2="-28" y2="8" stroke="#3d9060" stroke-width="2.5"/>
+      <line x1="0" y1="10" x2="-8" y2="38" stroke="#3d9060" stroke-width="2"/>
+      <line x1="0" y1="10" x2="8" y2="38" stroke="#3d9060" stroke-width="2"/>
+    </g>
+  </svg>
+  
+  <!-- Contents Title -->
+  <div style="position:absolute;top:12%;left:7%;z-index:5;">
+    <div style="font-size:5vw;font-weight:700;color:#1a6b4a;line-height:1.1;">目录</div>
+    <div style="font-size:2vw;color:#5ab08a;letter-spacing:3px;font-weight:500;margin-top:2px;">CONTENTS</div>
+  </div>
+  
+  <!-- Contents items -->
+  <div style="position:absolute;right:6%;top:12%;width:52%;z-index:5;display:flex;flex-direction:column;gap:1.8vh;">
+    <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.65);border:1px solid rgba(26,107,74,0.2);border-radius:6px;padding:10px 16px;clip-path:polygon(0 0,94% 0,100% 50%,94% 100%,0 100%);padding-right:38px;">
+      <div style="font-size:2.2vw;font-weight:700;font-style:italic;color:#1a6b4a;min-width:2.5vw;">1</div>
+      <div style="font-size:1.1vw;font-weight:600;color:#1a3a2a;">2026具体落地全景图</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.5);border:1px solid rgba(26,107,74,0.15);border-radius:6px;padding:10px 16px;clip-path:polygon(0 0,94% 0,100% 50%,94% 100%,0 100%);padding-right:38px;">
+      <div style="font-size:2.2vw;font-weight:700;font-style:italic;color:#1a6b4a;min-width:2.5vw;">2</div>
+      <div style="font-size:1.1vw;font-weight:600;color:#1a3a2a;">重点举措一：外延式增长</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.5);border:1px solid rgba(26,107,74,0.15);border-radius:6px;padding:10px 16px;clip-path:polygon(0 0,94% 0,100% 50%,94% 100%,0 100%);padding-right:38px;">
+      <div style="font-size:2.2vw;font-weight:700;font-style:italic;color:#1a6b4a;min-width:2.5vw;">3</div>
+      <div style="font-size:1.1vw;font-weight:600;color:#1a3a2a;">重点举措二：内生式增长（抚矿总院标杆打造）</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.5);border:1px solid rgba(26,107,74,0.15);border-radius:6px;padding:10px 16px;clip-path:polygon(0 0,94% 0,100% 50%,94% 100%,0 100%);padding-right:38px;">
+      <div style="font-size:2.2vw;font-weight:700;font-style:italic;color:#1a6b4a;min-width:2.5vw;">4</div>
+      <div style="font-size:1.1vw;font-weight:600;color:#1a3a2a;">重点举措三～五：IP打造、平台迭代、合规体系</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.5);border:1px solid rgba(26,107,74,0.15);border-radius:6px;padding:10px 16px;clip-path:polygon(0 0,94% 0,100% 50%,94% 100%,0 100%);padding-right:38px;">
+      <div style="font-size:2.2vw;font-weight:700;font-style:italic;color:#1a6b4a;min-width:2.5vw;">5</div>
+      <div style="font-size:1.1vw;font-weight:600;color:#1a3a2a;">2026战略目标与平台总体战略</div>
+    </div>
+  </div>
+  
+  <div class="slide-num">2</div>
+</div>
+
+<!-- ============================================
+     SLIDE 3 — SECTION OVERVIEW
+============================================ -->
+<div class="slide content-slide" id="slide-3">
+  <div class="bg-top-strip"></div>
+  <div class="slide-header">
+    <span class="breadcrumb">鹤护健康</span>
+    <span class="sep">›</span>
+    <span class="slide-title">2026具体落地全景图</span>
+  </div>
+  
+  <div class="body" style="display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2vh;">
+    <div style="font-size:2vw;font-weight:700;color:#1a6b4a;text-align:center;">鹤护健康2026具体落地全景图</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1vw;width:100%;">
+      <div style="background:linear-gradient(135deg,#1a6b4a,#2d8c60);border-radius:10px;padding:1.2vw;color:white;text-align:center;box-shadow:0 3px 12px rgba(26,107,74,0.3);">
+        <div style="font-size:1.8vw;font-weight:700;font-style:italic;">①</div>
+        <div style="font-size:0.85vw;font-weight:700;margin-top:6px;">外延式增长</div>
+        <div style="font-size:0.72vw;opacity:0.85;margin-top:4px;">第三方资源整合与并购摸底</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#2d7a50,#3d9060);border-radius:10px;padding:1.2vw;color:white;text-align:center;box-shadow:0 3px 12px rgba(26,107,74,0.25);">
+        <div style="font-size:1.8vw;font-weight:700;font-style:italic;">②</div>
+        <div style="font-size:0.85vw;font-weight:700;margin-top:6px;">内生式增长</div>
+        <div style="font-size:0.72vw;opacity:0.85;margin-top:4px;">抚矿总院标杆打造</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#3d8c60,#4da070);border-radius:10px;padding:1.2vw;color:white;text-align:center;box-shadow:0 3px 12px rgba(26,107,74,0.2);">
+        <div style="font-size:1.8vw;font-weight:700;font-style:italic;">③</div>
+        <div style="font-size:0.85vw;font-weight:700;margin-top:6px;">打造"朱白IP"</div>
+        <div style="font-size:0.72vw;opacity:0.85;margin-top:4px;">结合行业领域顶级专家资源</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#d4a017,#e8b830);border-radius:10px;padding:1.2vw;color:white;text-align:center;box-shadow:0 3px 12px rgba(212,160,23,0.3);">
+        <div style="font-size:1.8vw;font-weight:700;font-style:italic;">④</div>
+        <div style="font-size:0.85vw;font-weight:700;margin-top:6px;">持续优化平台迭代</div>
+        <div style="font-size:0.72vw;opacity:0.9;margin-top:4px;">打造确实落地</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#e8841a,#f09830);border-radius:10px;padding:1.2vw;color:white;text-align:center;box-shadow:0 3px 12px rgba(232,132,26,0.3);">
+        <div style="font-size:1.8vw;font-weight:700;font-style:italic;">⑤</div>
+        <div style="font-size:0.85vw;font-weight:700;margin-top:6px;">红线坚守</div>
+        <div style="font-size:0.72vw;opacity:0.9;margin-top:4px;">合规体系闭环与技术过渡</div>
+      </div>
+    </div>
+  </div>
+  
+  <div style="position:absolute;bottom:10px;right:60px;font-size:9px;color:rgba(26,107,74,0.5);font-style:italic;">打造中国处方药第一品牌 &nbsp; 打造合成生物标杆龙头企业</div>
+  <div class="slide-num">3</div>
+</div>
+
+<!-- ============================================
+     SLIDE 4 — 重点举措一 (Part 1)
+============================================ -->
+<div class="slide content-slide" id="slide-4">
+  <div class="bg-top-strip"></div>
+  <div class="slide-header">
+    <span class="breadcrumb">鹤护健康2026具体落地全景图</span>
+    <span class="sep">›</span>
+    <span class="slide-title">重点举措一：外延式增长（第三方资源整合与并购摸底）</span>
+  </div>
+  
+  <div class="body">
+    <div class="two-col" style="height:100%;">
+      <!-- Left column -->
+      <div style="display:flex;flex-direction:column;gap:0.8vh;overflow:hidden;">
+        <div class="section-title">肾病市场赛道全景扫描</div>
+        <ul class="bullet-list" style="font-size:0.78vw;">
+          <li><strong>流量内容型</strong>（如：肾上线）：百万级社群+专业科普，估值高，适宜轻资产流量采买</li>
+          <li><strong>全周期服务型</strong>（如：爱肾网）：营养电商，适宜供应链互换</li>
+          <li><strong>牌照工具型</strong>（如：鹫一健康）：银川互联网医院牌照+轻量级团队，适宜"买壳"整合</li>
+        </ul>
+        
+        <div class="difficulty-box"><strong>难点：</strong>垂直健康专病领域的用户流量如何实现共享？</div>
+        
+        <div class="section-title" style="margin-top:0.5vh;">行动落地：首轮初步接洽纪要</div>
+        <div class="action-box">
+          <strong>接洽标的：</strong>鹭一健康<br>
+          <strong>摸底成果：</strong>对方认可华润品牌，但是垂直领域私域流量共享有困难<br>
+          <strong>分析：</strong>垂直领域的KOL或专病平台将私域流量视为核心资产，不愿轻易共享。
+        </div>
+        
+        <div class="section-title" style="margin-top:0.5vh;">阶梯式合作路径</div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <div class="pathway-row">
+            <div class="pathway-label" style="background:#3d9060;">浅水区</div>
+            <div class="pathway-content">轻量BD：流量置换、内容采买、服务插件挂载（低预算，快起效）</div>
+          </div>
+          <div class="pathway-row">
+            <div class="pathway-label" style="background:#d4a017;">深水区</div>
+            <div class="pathway-content">联合运营：用"腹透液供应链"换对方"线上患者池"，利润分成</div>
+          </div>
+          <div class="pathway-row">
+            <div class="pathway-label" style="background:#1a6b4a;">核心区</div>
+            <div class="pathway-content">战略整合：针对牌照/技术型标的，探讨控股或买壳（需集团资本介入）</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right column -->
+      <div style="display:flex;flex-direction:column;gap:0.8vh;overflow:hidden;">
+        <div class="section-title">整合第三方服务平台</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7vw;">
+          <div class="card">
+            <div class="card-title">顶流医疗平台（丁香园）</div>
+            <div class="card-body">
+              采买丁香医生肾病/腹透科普内容版权；为活跃医生赠送用药助手专业版VIP；将用药指南接口嵌入鹤护医生端工作台。
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">IoT智能硬件平台</div>
+            <div class="card-body">
+              欧姆龙、鱼跃医疗、小米健康。数据级打通与硬件直联。
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">泛流量互联网大厂</div>
+            <div class="card-body">
+              腾讯医典、百度健康、京东健康。专病共建与精准引流——在肾衰竭/腹膜透析搜索结果页，定向投放"鹤护健康"引流卡片。
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">商业健康保险平台</div>
+            <div class="card-body">
+              众惠财产相互保险（肾病专病险最专业）、微保、平安健康险。"药+险+管"创新支付闭环。
+            </div>
+          </div>
+        </div>
+        
+        <div class="section-title" style="margin-top:0.5vh;">其他疾病领域服务平台探索</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5vw;font-size:0.75vw;">
+          <div style="background:#f0faf5;border:1px solid #c8e8d8;border-radius:6px;padding:6px 10px;">
+            <div style="font-weight:700;color:#1a6b4a;margin-bottom:2px;">集团内部</div>
+            <div>心血管/高血压：引入"同心管家"内容，结合欧姆龙/鱼跃智能血压计</div>
+          </div>
+          <div style="background:#fff8e8;border:1px solid #f0d88a;border-radius:6px;padding:6px 10px;">
+            <div style="font-weight:700;color:#8a6010;margin-bottom:2px;">外部合作</div>
+            <div>糖尿病：智云健康、糖护士；COPD：阶梯式合作路径</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="support-box" style="width:220px;">
+      <strong>总部资源支持</strong>
+      1. 战略决策 &nbsp; 2. 深入调研和落地中的专业支持 &nbsp; 3. 合规和法务的专业意见
+    </div>
+  </div>
+  
+  <div style="position:absolute;bottom:10px;right:60px;font-size:9px;color:rgba(26,107,74,0.5);font-style:italic;">打造中国处方药第一品牌 &nbsp; 打造合成生物标杆龙头企业</div>
+  <div class="slide-num">4</div>
+</div>
+
+<!-- ============================================
+     SLIDE 5 — 重点举措二 (Part 1)
+============================================ -->
+<div class="slide content-slide" id="slide-5">
+  <div class="bg-top-strip"></div>
+  <div class="slide-header">
+    <span class="breadcrumb">鹤护健康2026具体落地全景图</span>
+    <span class="sep">›</span>
+    <span class="slide-title">重点举措二：内生式增长（抚矿总院标杆打造）</span>
+  </div>
+  
+  <div class="body">
+    <div class="two-col" style="height:100%;">
+      <!-- Left: 标杆定义 -->
+      <div style="display:flex;flex-direction:column;gap:0.7vh;overflow:hidden;">
+        <div class="section-title">标杆定义</div>
+        <ul class="bullet-list" style="font-size:0.8vw;">
+          <li>全院患者体量50%注册（先对目标医院用户做分析）</li>
+          <li>单院患者月活＞35%</li>
+          <li>辅助医护全年至少有一项学术辅助产出或科室数字化管理可视化材料</li>
+          <li>院内全年科室会100%参与绑定宣传</li>
+          <li>单院配套宣传易拉宝、出院手册等全套落地宣传材料</li>
+        </ul>
+        
+        <div class="section-title" style="margin-top:0.5vh;">腹透专属场景"轻量化"产品配置</div>
+        <div class="card" style="margin-bottom:6px;">
+          <div class="card-title">腹透核心SOP打卡功能（极简版）</div>
+          <div class="card-body">
+            <span class="highlight-tag">每日必填</span>体重（进液前/排液后）、血压、超滤量、尿量<br>
+            <span class="highlight-tag">每周必填</span>导管出口处照片上传
+          </div>
+        </div>
+        <div class="action-box" style="font-size:0.75vw;">
+          <strong>合规设计：</strong>功能界定为"院外健康档案记录与随访工具"，而非"在线诊疗平台"<br>
+          <strong>资质补充：</strong>选择"医疗服务-就医服务/健康管理"小程序类目
+        </div>
+        
+        <div style="display:flex;flex-direction:column;gap:3px;margin-top:4px;">
+          <div style="background:#fff0f0;border-left:3px solid #c04040;border-radius:0 5px 5px 0;padding:4px 8px;font-size:0.75vw;">
+            <strong style="color:#c04040;">原则一：</strong>只做"预警"，不做"诊断"
+          </div>
+          <div style="background:#fff0f0;border-left:3px solid #c04040;border-radius:0 5px 5px 0;padding:4px 8px;font-size:0.75vw;">
+            <strong style="color:#c04040;">原则二：</strong>医护只做"就医引导"，不做"在线处方"
+          </div>
+          <div style="background:#fff0f0;border-left:3px solid #c04040;border-radius:0 5px 5px 0;padding:4px 8px;font-size:0.75vw;">
+            <strong style="color:#c04040;">原则三：</strong>用户协议中"免责声明"必须加粗，首次授权须勾选知情同意书
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right: 库存预警 -->
+      <div style="display:flex;flex-direction:column;gap:0.7vh;overflow:hidden;">
+        <div class="section-title">库存预警与"合规续方"流转</div>
+        <div class="action-box" style="font-size:0.78vw;margin-bottom:4px;">
+          <strong>核心思路：</strong>用系统算好患者什么时候缺腹透液，合规地把患者"导流"回销售渠道。
+        </div>
+        
+        <div style="font-size:0.82vw;font-weight:600;color:#1a6b4a;margin-bottom:3px;">具体落地步骤</div>
+        <div class="step-row">
+          <div class="step-num">1</div>
+          <div class="step-content"><strong>建立"虚拟库存"与自动扣减模型：</strong>初始建档时护士/患者录入库存量，每日打卡后自动按医嘱用量扣减。</div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">2</div>
+          <div class="step-content"><strong>触发多级预警机制：</strong>
+            <div class="pathway-row" style="margin-top:4px;">
+              <div class="pathway-label" style="background:#d4a017;font-size:0.7vw;min-width:55px;">🟡 黄色预警<br>（10天）</div>
+              <div class="pathway-content" style="font-size:0.73vw;">小程序弹窗+微信通知提醒尽快安排复诊续方；护士后台出现"待跟进续方名单"。</div>
+            </div>
+            <div class="pathway-row" style="margin-top:3px;">
+              <div class="pathway-label" style="background:#c03030;font-size:0.7vw;min-width:55px;">🔴 红色预警<br>（5天）</div>
+              <div class="pathway-content" style="font-size:0.73vw;">系统自动触发机器人语音电话或护士一键发送企微消息，提醒立即备药。</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">3</div>
+          <div class="step-content"><strong>异常预警机制：</strong>设置阈值（体重连续三天增加超1kg或AI识别疑似红肿），系统立即给科室推送高危预警。</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="support-box" style="width:210px;">
+      <strong>总部资源支持</strong>
+      1. 开发资源 &nbsp; 2. 合规和法务的支持
+    </div>
+  </div>
+  
+  <div style="position:absolute;bottom:10px;right:60px;font-size:9px;color:rgba(26,107,74,0.5);font-style:italic;">打造中国处方药第一品牌 &nbsp; 打造合成生物标杆龙头企业</div>
+  <div class="slide-num">5</div>
+</div>
+
+<!-- ============================================
+     SLIDE 6 — 重点举措二 (Part 2)
+============================================ -->
+<div class="slide content-slide" id="slide-6">
+  <div class="bg-top-strip"></div>
+  <div class="slide-header">
+    <span class="breadcrumb">鹤护健康2026具体落地全景图</span>
+    <span class="sep">›</span>
+    <span class="slide-title">重点举措二：内生式增长（抚矿总院标杆打造）—— 地推与激励</span>
+  </div>
+  
+  <div class="body">
+    <div class="two-col" style="height:100%;">
+      <!-- Left: 地推与患者强绑定 -->
+      <div style="display:flex;flex-direction:column;gap:0.8vh;overflow:hidden;">
+        <div class="section-title">2. 地推与患者强绑定</div>
+        
+        <div style="font-size:0.85vw;font-weight:700;color:#2d5a3a;margin-bottom:3px;">物理植入</div>
+        <ul class="bullet-list" style="font-size:0.8vw;">
+          <li><strong>产品包装植入：</strong>每箱腹透液上贴"抚矿总院专属腹透居家管理扫码绑定"不干胶。</li>
+          <li><strong>腹透室植入：</strong>抚矿总院腹透操作培训室，墙面海报、操作台面全覆盖小程序二维码。</li>
+        </ul>
+        
+        <div style="font-size:0.85vw;font-weight:700;color:#2d5a3a;margin:6px 0 3px;">强制性话术SOP（护士执行，医药代表辅助督导）</div>
+        <div class="action-box" style="font-size:0.78vw;">
+          患者做首透或出院时，护士标配动作："家属拿出手机扫这个码。以后每天的超滤量必须填在里面。不填的话，下次来复诊，医生看不到你的数据，没法给你调配方。"
+        </div>
+      </div>
+      
+      <!-- Right: 阳光劳务激励机制 -->
+      <div style="display:flex;flex-direction:column;gap:0.8vh;overflow:hidden;">
+        <div class="section-title">3. 合规的"阳光劳务"激励机制</div>
+        
+        <div class="card" style="margin-bottom:6px;">
+          <div class="card-title">患教会讲课费/科普稿费</div>
+          <div class="card-body">
+            小程序内设立"抚矿总院腹透宣教专区"，邀请科主任、主治医师或专科护士长撰写科普文章或录制短视频。<br>
+            <span class="highlight-tag" style="margin-top:4px;display:inline-block;">交付物</span>真实发布的科普文章、短视频、线上患教会直播录屏。
+          </div>
+        </div>
+        
+        <div class="card" style="margin-bottom:6px;">
+          <div class="card-title">数字化产品"医学顾问/专家咨询费"</div>
+          <div class="card-body">
+            在开发迭代"鹤护健康"时，邀请科主任或护士长参加"产品需求研讨会"或"数字化病房建设线上咨询会"。<br>
+            <span class="highlight-tag" style="margin-top:4px;display:inline-block;">交付物</span>会议纪要、专家签字的咨询意见表、会议照片。<br>
+            <span class="highlight-tag gold" style="margin-top:4px;display:inline-block;">结算</span>以公司名义向专家支付"医学顾问费/会议咨询费"。
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="support-box" style="width:210px;">
+      <strong>总部资源支持</strong>
+      1. 开发资源 &nbsp; 2. 合规和法务的支持
+    </div>
+  </div>
+  
+  <div style="position:absolute;bottom:10px;right:60px;font-size:9px;color:rgba(26,107,74,0.5);font-style:italic;">打造中国处方药第一品牌 &nbsp; 打造合成生物标杆龙头企业</div>
+  <div class="slide-num">6</div>
+</div>
+
+<!-- ============================================
+     SLIDE 7 — 重点举措三
+============================================ -->
+<div class="slide content-slide" id="slide-7">
+  <div class="bg-top-strip"></div>
+  <div class="slide-header">
+    <span class="breadcrumb">鹤护健康2026具体落地全景图</span>
+    <span class="sep">›</span>
+    <span class="slide-title">重点举措三：打造"朱白IP"结合行业领域顶级专家资源</span>
+  </div>
+  
+  <div class="body">
+    <div class="three-col" style="height:85%;">
+      <!-- Column 1: IP -->
+      <div class="strategy-card">
+        <div class="sc-title">
+          <div class="sc-title icon" style="background:#e8f5ee;">📱</div>
+          小程序视频线上宣讲专栏
+        </div>
+        <div class="difficulty-box"><strong>难点：</strong>具体落地方案，如何打造？</div>
+        <div class="action-box" style="margin-top:6px;font-size:0.78vw;">
+          <strong>分析：</strong>IP打造不能只停留在概念，需要有明确的载体和推进时间表。
+        </div>
+        <div style="margin-top:8px;font-size:0.8vw;font-weight:600;color:#1a6b4a;">解决方案（MVP跑通）：</div>
+        <ul class="bullet-list" style="font-size:0.77vw;margin-top:4px;">
+          <li>前3个月利用现有"视频号+公众号+企微+轻量级小程序"搭建IP矩阵</li>
+          <li>赋予"朱白"具体人设（靠谱的智能健康管家）</li>
+          <li>采用"内容运营先行，重度开发后置"策略</li>
+          <li>申请少量启动资金用于UI设计和第一批高质量内容制作</li>
+          <li>根据前3个月流量转化效果，再申请二期系统开发预算</li>
+        </ul>
+      </div>
+      
+      <!-- Column 2: AI -->
+      <div class="strategy-card">
+        <div class="sc-title">
+          <div class="sc-title icon" style="background:#e8f5ee;">🤖</div>
+          AI智能体拟人形象
+        </div>
+        <div class="difficulty-box"><strong>难点：</strong>今年第一步做到什么程度？是否会增加开发预算？</div>
+        <div style="margin-top:8px;padding:10px;background:#f0faf5;border-radius:8px;font-size:0.78vw;color:#444;line-height:1.6;">
+          AI智能体形象的打造需要在预算与效果之间取得平衡。建议先以轻量化方式切入，待产品核心功能稳定后再深入投入形象打造。
+        </div>
+      </div>
+      
+      <!-- Column 3: 旅游医疗 -->
+      <div class="strategy-card">
+        <div class="sc-title">
+          <div class="sc-title icon" style="background:#e8f5ee;">✈️</div>
+          辽-琼腹透患者异地旅游医疗顾问团队
+        </div>
+        <div class="difficulty-box"><strong>难点：</strong>是否做？</div>
+        <div style="margin-top:8px;padding:10px;background:#f0faf5;border-radius:8px;font-size:0.78vw;color:#444;line-height:1.6;">
+          此项目涉及跨地域协作，需要评估腹透患者的异地旅游需求规模、医疗资源可得性以及商业化路径的可行性。
+        </div>
+      </div>
+    </div>
+    
+    <div class="support-box" style="width:320px;right:0;">
+      <strong>总部资源支持</strong>
+      1. 战略决策 &nbsp; 2. 合规和法务的支持 &nbsp; 3. 开发支持 &nbsp; 4. 涉及保险公司及旅游公司调研谈判中的专业支持
+    </div>
+  </div>
+  
+  <div style="position:absolute;bottom:10px;right:60px;font-size:9px;color:rgba(26,107,74,0.5);font-style:italic;">打造中国处方药第一品牌 &nbsp; 打造合成生物标杆龙头企业</div>
+  <div class="slide-num">7</div>
+</div>
+
+<!-- ============================================
+     SLIDE 8 — 重点举措四
+============================================ -->
+<div class="slide content-slide" id="slide-8">
+  <div class="bg-top-strip"></div>
+  <div class="slide-header">
+    <span class="breadcrumb">鹤护健康2026具体落地全景图</span>
+    <span class="sep">›</span>
+    <span class="slide-title">重点举措四：持续优化平台迭代，打造确实落地</span>
+  </div>
+  
+  <div class="body">
+    <div style="display:flex;flex-direction:column;gap:1vh;height:100%;">
+      <div style="font-size:1.1vw;font-weight:700;color:#1a6b4a;">"鹤护健康"患者管理平台优化需求文档 &nbsp;<span style="font-size:0.85vw;font-weight:normal;color:#555;">版本：3.0 &nbsp; 日期：2025年12月23日</span></div>
+      <div style="background:#f0faf5;border:1px solid #c8e8d8;border-radius:8px;padding:8px 12px;font-size:0.82vw;color:#2d5a3a;">
+        通过线下走访辽宁、山西、陕西、湖南、福建等省份多家医院（覆盖90+家三甲医院），收集医护及患者对现有平台的优化建议，重点解决数据记录效率、多角色协作、老年患者体验及临床管理痛点。
+      </div>
+      
+      <div class="three-col" style="flex:1;min-height:0;">
+        <div style="display:flex;flex-direction:column;gap:6px;overflow:hidden;">
+          <div style="background:linear-gradient(135deg,#1a6b4a,#2d8c60);border-radius:8px;padding:8px 12px;color:white;">
+            <div style="font-size:1vw;font-weight:700;margin-bottom:4px;">新增功能需求</div>
+          </div>
+          <div class="card" style="flex:1;overflow:auto;">
+            <div class="card-body">
+              <ul class="bullet-list">
+                <li>多角色协作功能（医生/护士/患者三端联动）</li>
+                <li>化验单OCR自动识别与数据结构化</li>
+                <li>AI辅助健康预警模型集成</li>
+                <li>腹透液库存自动管理与续方流程</li>
+                <li>智能设备（血压计、体重秤）数据直联</li>
+                <li>患者知识库RAG问答系统</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <div style="display:flex;flex-direction:column;gap:6px;overflow:hidden;">
+          <div style="background:linear-gradient(135deg,#d4a017,#e8b830);border-radius:8px;padding:8px 12px;color:white;">
+            <div style="font-size:1vw;font-weight:700;margin-bottom:4px;">功能优化需求</div>
+          </div>
+          <div class="card" style="flex:1;overflow:auto;">
+            <div class="card-body">
+              <ul class="bullet-list">
+                <li>数据录入流程简化（减少打卡步骤）</li>
+                <li>医护后台数据可视化与报表生成</li>
+                <li>消息推送机制优化（减少打扰）</li>
+                <li>患者档案管理与历史数据查阅</li>
+                <li>科室管理看板完善</li>
+                <li>企微生态深度集成</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <div style="display:flex;flex-direction:column;gap:6px;overflow:hidden;">
+          <div style="background:linear-gradient(135deg,#e8841a,#f09830);border-radius:8px;padding:8px 12px;color:white;">
+            <div style="font-size:1vw;font-weight:700;margin-bottom:4px;">体验优化需求</div>
+          </div>
+          <div class="card" style="flex:1;overflow:auto;">
+            <div class="card-body">
+              <ul class="bullet-list">
+                <li>老年患者大字模式与语音录入支持</li>
+                <li>离线功能支持（弱网环境下可用）</li>
+                <li>首次使用引导流程优化</li>
+                <li>患者端交互动线重新梳理</li>
+                <li>加载速度与性能提升</li>
+                <li>无障碍功能（视觉障碍支持）</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div style="position:absolute;bottom:10px;right:60px;font-size:9px;color:rgba(26,107,74,0.5);font-style:italic;">打造中国处方药第一品牌 &nbsp; 打造合成生物标杆龙头企业</div>
+  <div class="slide-num">8</div>
+</div>
+
+<!-- ============================================
+     SLIDE 9 — 重点举措五 合规
+============================================ -->
+<div class="slide content-slide" id="slide-9">
+  <div class="bg-top-strip"></div>
+  <div class="slide-header">
+    <span class="breadcrumb">鹤护健康2026具体落地全景图</span>
+    <span class="sep">›</span>
+    <span class="slide-title">重点举措五：红线坚守：合规体系闭环与技术过渡</span>
+  </div>
+  
+  <div class="body">
+    <div class="two-col" style="height:100%;">
+      <!-- Left: 营销合规 -->
+      <div style="display:flex;flex-direction:column;gap:0.7vh;overflow:hidden;">
+        <div class="section-title">营销合规：基于一线调研的务实激励体系</div>
+        
+        <div style="display:flex;gap:6px;margin-bottom:4px;">
+          <div style="background:#fff0f0;border:1px solid #ffc0c0;border-radius:6px;padding:5px 10px;flex:1;font-size:0.78vw;">
+            <div style="font-weight:700;color:#c03030;margin-bottom:2px;">清退</div>
+            全面停止向医护端发放米面粮油等实物奖励兑换
+          </div>
+          <div style="background:#fff8e8;border:1px solid #f0d88a;border-radius:6px;padding:5px 10px;flex:1;font-size:0.78vw;">
+            <div style="font-weight:700;color:#8a6010;margin-bottom:2px;">难点</div>
+            但是医护普遍接受实物回馈——见标杆医院部分
+          </div>
+        </div>
+        
+        <div class="difficulty-box"><strong>调研结论：</strong>经一线调研，基层护士对"学术赋能"无感，已放弃该方案</div>
+        
+        <div style="display:flex;flex-direction:column;gap:5px;margin-top:4px;">
+          <div class="card">
+            <div class="card-title" style="color:#1a6b4a;">方案一：阳光劳务（合法给收入）</div>
+            <div class="card-body">弃用灰色积分，将线上答疑、患教直播转化为"标准劳务项目"；签署正规《劳务咨询/撰稿协议》，代扣代缴个税，光明正大发"讲课费"。</div>
+          </div>
+          <div class="card">
+            <div class="card-title" style="color:#d4a017;">方案二：对公科室共建（合法给物资）</div>
+            <div class="card-body">停止对个人实物奖励，设立"科室活跃度榜单"；走对公赞助流程，向高活跃科室捐赠"病房患教大屏、打印机、会议餐费"等实用物资。</div>
+          </div>
+          <div class="card">
+            <div class="card-title" style="color:#e8841a;">方案三：系统减负特权（合法给效率）</div>
+            <div class="card-body">零财务风险：为高活跃护士解锁"超级助理特权"（如AI智能分诊过滤无效提问）；用"每天帮医护早下班半小时"的特权替代物质奖励。</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right: 数据合规 & 平台合规 -->
+      <div style="display:flex;flex-direction:column;gap:0.7vh;overflow:hidden;">
+        <div class="section-title">数据合规：患者隐私与《个人信息保护法》防护</div>
+        
+        <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:8px;">
+          <div class="compliance-row">
+            <div class="compliance-icon">🔐</div>
+            <div style="font-size:0.8vw;"><strong>化验单OCR过渡方案：</strong>采用"端侧本地识别"或"强制物理遮挡（遮盖姓名/就诊号）"</div>
+          </div>
+          <div class="compliance-row">
+            <div class="compliance-icon">✅</div>
+            <div style="font-size:0.8vw;"><strong>承诺：</strong>平台绝不云端留存带有敏感信息（PHI）的原图，只抓取指标数值</div>
+          </div>
+        </div>
+        
+        <div class="section-title">平台合规</div>
+        <div class="card" style="flex:1;">
+          <div class="card-body">
+            <ul class="bullet-list">
+              <li>加强外部合规动态追踪，建立合规应急SOP</li>
+              <li>完成淮安顶域后，更新平台ICP备案和公安备案</li>
+              <li>上海公司作为应用方，严守数据隐私、资质备案与营销红线</li>
+              <li>建立合规审查机制，对新功能开发进行合规预评估</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="support-box" style="width:280px;">
+      <strong>总部资源需求</strong>
+      1. 战略决策 &nbsp; 2. 合规和法务的意见 &nbsp; 3. 开发团队支持
+    </div>
+  </div>
+  
+  <div style="position:absolute;bottom:10px;right:60px;font-size:9px;color:rgba(26,107,74,0.5);font-style:italic;">打造中国处方药第一品牌 &nbsp; 打造合成生物标杆龙头企业</div>
+  <div class="slide-num">9</div>
+</div>
+
+<!-- ============================================
+     SLIDE 10 — SECTION DIVIDER: 战略目标
+============================================ -->
+<div class="slide section-divider-slide" id="slide-10" style="display:flex;background:linear-gradient(160deg,#1a4a32 0%,#1a6b4a 50%,#2d8c60 100%);">
+  <svg style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <radialGradient id="rg1" cx="20%" cy="60%" r="50%">
+        <stop offset="0%" stop-color="#5ab08a" stop-opacity="0.25"/>
+        <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="1280" height="720" fill="url(#rg1)"/>
+    <circle cx="100" cy="360" r="220" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+    <circle cx="100" cy="360" r="160" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+    <circle cx="1180" cy="360" r="180" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+    <circle cx="640" cy="640" r="120" fill="none" stroke="rgba(212,160,23,0.15)" stroke-width="1"/>
+    <!-- decorative gold lines -->
+    <line x1="0" y1="200" x2="400" y2="200" stroke="rgba(212,160,23,0.1)" stroke-width="1"/>
+    <line x1="0" y1="520" x2="400" y2="520" stroke="rgba(212,160,23,0.1)" stroke-width="1"/>
+    <line x1="880" y1="200" x2="1280" y2="200" stroke="rgba(212,160,23,0.1)" stroke-width="1"/>
+    <line x1="880" y1="520" x2="1280" y2="520" stroke="rgba(212,160,23,0.1)" stroke-width="1"/>
+  </svg>
+
+  <!-- Left decorative text -->
+  <div style="position:absolute;left:6%;top:50%;transform:translateY(-50%);z-index:5;display:flex;flex-direction:column;gap:1.5vh;">
+    <div style="writing-mode:vertical-rl;font-size:0.8vw;color:rgba(255,255,255,0.3);letter-spacing:4px;">STRATEGIC GOALS</div>
+  </div>
+
+  <div class="div-content" style="position:relative;z-index:5;">
+    <div style="font-size:0.9vw;color:rgba(212,160,23,0.9);letter-spacing:5px;margin-bottom:14px;text-transform:uppercase;">Part II</div>
+    <h2 style="font-size:3.8vw;font-weight:700;color:white;letter-spacing:5px;">2026战略目标</h2>
+    <div style="width:70px;height:3px;background:linear-gradient(90deg,#d4a017,rgba(212,160,23,0.3));border-radius:2px;margin:18px auto;"></div>
+    <p style="color:rgba(255,255,255,0.7);font-size:1.1vw;letter-spacing:3px;">全网最有价值的数字化肾病患者管理平台</p>
+    <!-- Four pillars preview -->
+    <div style="display:flex;gap:1.5vw;margin-top:2.5vh;justify-content:center;">
+      <div style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:6px 14px;font-size:0.85vw;color:rgba(255,255,255,0.85);">患者最多</div>
+      <div style="background:rgba(212,160,23,0.2);border:1px solid rgba(212,160,23,0.4);border-radius:6px;padding:6px 14px;font-size:0.85vw;color:rgba(255,255,255,0.85);">患者最活跃</div>
+      <div style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:6px 14px;font-size:0.85vw;color:rgba(255,255,255,0.85);">最聪明AI</div>
+      <div style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:6px 14px;font-size:0.85vw;color:rgba(255,255,255,0.85);">商业价值闭环</div>
+    </div>
+  </div>
+
+  <div class="slide-num" style="color:rgba(255,255,255),0.3);">10</div>
+</div>
+
+<!-- ============================================
+     SLIDE 11 — 战略目标：患者最多 + 患者最活跃
+============================================ -->
+<div class="slide content-slide" id="slide-11">
+  <div class="bg-top-strip"></div>
+  <div class="slide-header">
+    <span class="breadcrumb">鹤护健康2026战略</span>
+    <span class="sep">›</span>
+    <span class="slide-title">战略目标：全网最有价值的数字化肾病患者管理平台</span>
+  </div>
+
+  <div class="body">
+    <div class="two-col" style="height:100%;">
+
+      <!-- 患者最多 -->
+      <div style="display:flex;flex-direction:column;gap:0.7vh;overflow:hidden;">
+        <div style="background:linear-gradient(135deg,#1a6b4a,#2d8c60);border-radius:10px;padding:10px 14px;color:white;display:flex;align-items:center;gap:10px;">
+          <div style="font-size:2vw;font-weight:700;font-style:italic;opacity:0.7;">①</div>
+          <div>
+            <div style="font-size:1.2vw;font-weight:700;">患者最多</div>
+            <div style="font-size:0.8vw;opacity:0.85;">内生式 + 外延式增长 + 平台持续迭代优化</div>
+          </div>
+        </div>
+
+        <div style="font-size:0.85vw;font-weight:700;color:#1a6b4a;margin:4px 0 2px;">内生式增长</div>
+        <ul class="bullet-list" style="font-size:0.8vw;">
+          <li>抚矿总院标杆打造，扫码绑定、医患互动、送液到家全流程跑通</li>
+          <li>全院扩展至内分泌科、心内科，形成"全院级慢病管理平台"</li>
+          <li>形成《华润健康数字慢病SOP白皮书》，向华润健康旗下机构全面推广</li>
+        </ul>
+
+        <div style="font-size:0.85vw;font-weight:700;color:#1a6b4a;margin:4px 0 2px;">外延式增长</div>
+        <ul class="bullet-list" style="font-size:0.8vw;">
+          <li>通过收购/入股外部成熟"牌照方"或"流量方"（如鹫一健康等），快速吸纳非华润体系外部患者</li>
+          <li>整合第三方服务平台：丁香园、IoT硬件、腾讯/百度/京东健康、商业健康险平台</li>
+        </ul>
+
+        <div style="font-size:0.85vw;font-weight:700;color:#1a6b4a;margin:4px 0 2px;">平台持续迭代优化</div>
+        <ul class="bullet-list" style="font-size:0.8vw;">
+          <li>覆盖90+家三甲医院调研，版本3.0需求文档落地实施</li>
+          <li>重点解决数据记录效率、多角色协作、老年患者体验及临床管理痛点</li>
+        </ul>
+
+        <div style="background:#f0faf5;border:1px solid #c8e8d8;border-radius:6px;padding:6px 10px;font-size:0.78vw;color:#2d5a3a;margin-top:2px;">
+          <strong>推广破局：</strong>自推为主（深耕华润系医疗网络）+ 借力为辅（整合第三方服务平台）
+        </div>
+      </div>
+
+      <!-- 患者最活跃 -->
+      <div style="display:flex;flex-direction:column;gap:0.7vh;overflow:hidden;">
+        <div style="background:linear-gradient(135deg,#d4a017,#e8b830);border-radius:10px;padding:10px 14px;color:white;display:flex;align-items:center;gap:10px;">
+          <div style="font-size:2vw;font-weight:700;font-style:italic;opacity:0.7;">②</div>
+          <div>
+            <div style="font-size:1.2vw;font-weight:700;">患者最活跃</div>
+            <div style="font-size:0.8vw;opacity:0.9;">从"专科工具"到"无界生态"的 1 到 N 进化路线图</div>
+          </div>
+        </div>
+
+        <div style="font-size:0.85vw;font-weight:700;color:#8a6010;margin:4px 0 2px;">全病程管理游戏化/任务化</div>
+        <div style="font-size:0.8vw;color:#444;line-height:1.5;padding-left:10px;">结合微信小程序的轻量化优势，将慢病管理（如打卡服药、记录指标）做成每日互动任务，结合"积分商城"兑换健康周边。</div>
+
+        <div style="font-size:0.85vw;font-weight:700;color:#8a6010;margin:4px 0 2px;">社群与私域运营</div>
+        <div style="font-size:0.8vw;color:#444;line-height:1.5;padding-left:10px;">基于企微建立"专病病友群"，由智能助手或真人护士（健管师）每日提供高价值科普、答疑，通过社群互动提升月活（MAU）。</div>
+
+        <div style="font-size:0.85vw;font-weight:700;color:#8a6010;margin:4px 0 2px;">物联网（IoT）设备绑定</div>
+        <div style="font-size:0.8vw;color:#444;line-height:1.5;padding-left:10px;">接入智能穿戴设备（如血压计、智能手表），实现数据自动上传与预警，让平台成为患者每日必看的"健康看板"。</div>
+
+        <div style="font-size:0.85vw;font-weight:700;color:#8a6010;margin:4px 0 2px;">横向扩展（跨病种探索）</div>
+        <div style="font-size:0.8vw;color:#444;line-height:1.5;padding-left:10px;">依托双鹤现有优势药企资源，将"鹤护模式"平移，孵化"心血管管家"、"糖友管家"等新病种模块，实现从"单病种"到"泛慢病平台"的跨越。</div>
+
+        <div style="display:flex;gap:6px;margin-top:4px;">
+          <div style="flex:1;background:#fff8e8;border:1px solid #f0d88a;border-radius:6px;padding:5px 8px;font-size:0.75vw;"><strong style="color:#8a6010;">基石期：</strong>打透腹膜透析场景，完善底层架构与合规体系</div>
+          <div style="flex:1;background:#fff8e8;border:1px solid #f0d88a;border-radius:6px;padding:5px 8px;font-size:0.75vw;"><strong style="color:#8a6010;">扩展期：</strong>向心血管、糖尿病、COPD等慢病领域快速拓展</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="position:absolute;bottom:10px;right:60px;font-size:9px;color:rgba(26,107,74,0.5);font-style:italic;">打造中国处方药第一品牌 &nbsp; 打造合成生物标杆龙头企业</div>
+  <div class="slide-num">11</div>
+</div>
+
+<!-- ============================================
+     SLIDE 11b — 战略目标：最聪明AI + 商业价值闭环 + 技术协同
+============================================ -->
+<div class="slide content-slide" id="slide-11b">
+  <div class="bg-top-strip"></div>
+  <div class="slide-header">
+    <span class="breadcrumb">鹤护健康2026战略</span>
+    <span class="sep">›</span>
+    <span class="slide-title">战略目标：最聪明AI + 商业价值闭环 + 技术协同</span>
+  </div>
+
+  <div class="body">
+    <div class="two-col" style="height:88%;">
+
+      <!-- 最聪明AI -->
+      <div style="display:flex;flex-direction:column;gap:0.7vh;overflow:hidden;">
+        <div style="background:linear-gradient(135deg,#e8841a,#f09830);border-radius:10px;padding:10px 14px;color:white;display:flex;align-items:center;gap:10px;">
+          <div style="font-size:2vw;font-weight:700;font-style:italic;opacity:0.7;">③</div>
+          <div>
+            <div style="font-size:1.2vw;font-weight:700;">最聪明AI</div>
+            <div style="font-size:0.8vw;opacity:0.9;">医疗AI壁垒在于高质量专业数据与临床场景微调</div>
+          </div>
+        </div>
+
+        <div style="font-size:0.85vw;font-weight:700;color:#a05010;margin:4px 0 2px;">难点拆解</div>
+        <div style="background:#fff0e8;border-left:3px solid #e8841a;border-radius:0 6px 6px 0;padding:5px 10px;font-size:0.8vw;color:#6b3a10;">
+          医疗AI的壁垒不在于通用大模型，而在于高质量的医疗专业数据和针对特定临床场景的微调。
+        </div>
+
+        <div style="font-size:0.85vw;font-weight:700;color:#a05010;margin:4px 0 2px;">核心策略</div>
+        <ul class="bullet-list" style="font-size:0.8vw;">
+          <li><strong>联合顶级三甲医院打磨：</strong>利用"标杆医院合作"，获取脱敏后的真实世界数据（RWS），训练模型。</li>
+          <li><strong>重点开发患者知识问答库（RAG肾病）：</strong>让AI成为"医生的超级助理"和"患者的24小时专属护士"。</li>
+          <li><strong>AI健康体"鹤小护"：</strong>实现从"被动抢救"到"主动守护"的转变，7x24小时自动预警。</li>
+        </ul>
+
+        <!-- 商业价值闭环 -->
+        <div style="background:linear-gradient(135deg,#1a6b4a,#2d8c60);border-radius:10px;padding:10px 14px;color:white;display:flex;align-items:center;gap:10px;margin-top:4px;">
+          <div style="font-size:2vw;font-weight:700;font-style:italic;opacity:0.7;">④</div>
+          <div>
+            <div style="font-size:1.2vw;font-weight:700;">商业价值闭环</div>
+          </div>
+        </div>
+        <ul class="bullet-list" style="font-size:0.8vw;">
+          <li><strong>增值服务包：</strong>推出VIP家庭医生包、异地旅游增值服务等高客单价产品</li>
+          <li><strong>药械/消费医疗电商：</strong>"润鹤智选"腹透专营店——慢病健康生活精选平台。特医食品、健康消费品等。</li>
+          <li><strong>腹透液配送机制：</strong>打通线上续方至线下配送的完整链路</li>
+        </ul>
+      </div>
+
+      <!-- 技术协同 + 战略对齐 -->
+      <div style="display:flex;flex-direction:column;gap:0.7vh;overflow:hidden;">
+        <div class="section-title">战略对齐：深刻领会三大指示</div>
+
+        <div style="font-size:0.85vw;font-weight:700;color:#1a6b4a;margin:3px 0 2px;">技术协同：智数部统筹，探索敏捷迭代与ERP系统兼容</div>
+        <div class="card" style="margin-bottom:6px;">
+          <div class="card-title">ERP系统兼容性</div>
+          <div class="card-body">
+            <div style="margin-bottom:4px;"><strong>涉及方：</strong>总部智数部、ERP侧、淮安质量部、上海公司</div>
+            <div style="margin-bottom:4px;"><strong>目标：</strong>实现未来电商平台商品批量上架程序标准统一</div>
+            <div style="margin-bottom:4px;"><strong>路径：</strong>上海公司配合明确2026年度具体上架商品品类，按品类分型（医疗器械类、日用品类等）明确材料要求及具体供应商</div>
+            <div><strong>资源：</strong>如无法在工业ERP与电商ERP二者之间完成平衡兼容，建议在已完成入库的供应商中寻找可以完成多品种采购的</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:6px;">
+          <div class="card-title">合规把关</div>
+          <div class="card-body">
+            <ul class="bullet-list">
+              <li>上海公司作为应用方，严守数据隐私、资质备案与营销红线</li>
+              <li>目前正在积极对齐：完成淮安顶域后，更新平台ICP备案和公安备案的方案选择</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">推广破局</div>
+          <div class="card-body">
+            <div style="display:flex;gap:8px;">
+              <div style="flex:1;background:#e8f5ee;border-radius:6px;padding:6px 8px;font-size:0.76vw;"><strong style="color:#1a6b4a;">自推为主</strong><br>深耕华润系医疗网络</div>
+              <div style="flex:1;background:#fff8e8;border-radius:6px;padding:6px 8px;font-size:0.76vw;"><strong style="color:#8a6010;">借力为辅</strong><br>整合第三方服务平台</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="position:absolute;bottom:10px;right:60px;font-size:9px;color:rgba(26,107,74,0.5);font-style:italic;">打造中国处方药第一品牌 &nbsp; 打造合成生物标杆龙头企业</div>
+  <div class="slide-num">12</div>
+</div>
+
+<!-- ============================================
+     SLIDE 13 — SECTION DIVIDER: 平台总体战略
+============================================ -->
+<div class="slide section-divider-slide" id="slide-12" style="background:linear-gradient(160deg,#1a5a3a 0%,#2d8c60 60%,#3d9c70 100%);display:flex;">
+  <svg style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid slice">
+    <circle cx="200" cy="400" r="270" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    <circle cx="200" cy="400" r="195" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+    <circle cx="1100" cy="300" r="220" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    <circle cx="640" cy="660" r="150" fill="none" stroke="rgba(212,160,23,0.1)" stroke-width="1"/>
+    <line x1="0" y1="185" x2="460" y2="185" stroke="rgba(212,160,23,0.08)" stroke-width="1"/>
+    <line x1="0" y1="535" x2="460" y2="535" stroke="rgba(212,160,23,0.08)" stroke-width="1"/>
+    <line x1="820" y1="185" x2="1280" y2="185" stroke="rgba(212,160,23,0.08)" stroke-width="1"/>
+    <line x1="820" y1="535" x2="1280" y2="535" stroke="rgba(212,160,23,0.08)" stroke-width="1"/>
+  </svg>
+
+  <div class="div-content" style="position:relative;z-index:5;">
+    <div style="font-size:0.9vw;color:rgba(212,160,23,0.9);letter-spacing:5px;margin-bottom:14px;">Part III</div>
+    <h2 style="font-size:3.8vw;font-weight:700;color:white;letter-spacing:5px;">平台总体战略目标</h2>
+    <div style="width:70px;height:3px;background:linear-gradient(90deg,#d4a017,rgba(212,160,23,0.3));border-radius:2px;margin:18px auto;"></div>
+    <p style="color:rgba(255,255,255,0.7);font-size:1.1vw;letter-spacing:3px;">战略目标：全网最有价值的数字化患者管理平台</p>
+    <div style="display:flex;gap:1.2vw;margin-top:2.5vh;justify-content:center;flex-wrap:wrap;">
+      <div style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:5px 12px;font-size:0.82vw;color:rgba(255,255,255,0.85);">患者最多：内生式增长</div>
+      <div style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:5px 12px;font-size:0.82vw;color:rgba(255,255,255,0.85);">患者最活跃：外延式增长</div>
+      <div style="background:rgba(212,160,23,0.2);border:1px solid rgba(212,160,23,0.4);border-radius:6px;padding:5px 12px;font-size:0.82vw;color:rgba(255,255,255,0.85);">最聪明AI</div>
+      <div style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:5px 12px;font-size:0.82vw;color:rgba(255,255,255,0.85);">商业价值闭环</div>
+    </div>
+  </div>
+
+  <div class="slide-num" style="color:rgba(255,255,255,0.3);">12</div>
+</div>
+
+<!-- ============================================
+     SLIDE 13 — 患者最多：华润双鹤×华润健康 + 外延式增长
+============================================ -->
+<div class="slide content-slide" id="slide-13">
+  <div class="bg-top-strip"></div>
+  <div class="slide-header">
+    <span class="breadcrumb">平台总体战略目标</span>
+    <span class="sep">›</span>
+    <span class="slide-title">患者最多（内生式）& 患者最活跃（外延式）</span>
+  </div>
+
+  <div class="body">
+    <div class="two-col" style="height:100%;">
+
+      <!-- 患者最多：双赢模式 + 三步走 -->
+      <div style="display:flex;flex-direction:column;gap:0.7vh;overflow:hidden;">
+        <div style="background:linear-gradient(135deg,#1a6b4a,#2d8c60);border-radius:10px;padding:8px 12px;color:white;">
+          <div style="font-size:1.1vw;font-weight:700;">患者最多 — 华润双鹤 × 华润健康</div>
+          <div style="font-size:0.78vw;opacity:0.85;">打造集团内部"医-患-企"生态联合舰队</div>
+        </div>
+
+        <div style="display:flex;gap:6px;">
+          <div style="flex:1;background:#e8f5ee;border:1px solid #c8e8d8;border-radius:8px;padding:8px 10px;font-size:0.78vw;">
+            <div style="font-weight:700;color:#1a6b4a;margin-bottom:4px;text-align:center;">华润双鹤（我们提供）</div>
+            <ul class="bullet-list" style="font-size:0.76vw;">
+              <li>鹤护健康数字化平台</li>
+              <li>底层安全架构</li>
+              <li>AI及运营支持</li>
+              <li>药械供应链（腹透液及营养品）</li>
+            </ul>
+          </div>
+          <div style="display:flex;align-items:center;font-size:1.4vw;color:#d4a017;padding:0 4px;">⇄</div>
+          <div style="flex:1;background:#fff8e8;border:1px solid #f0d88a;border-radius:8px;padding:8px 10px;font-size:0.78vw;">
+            <div style="font-weight:700;color:#8a6010;margin-bottom:4px;text-align:center;">华润健康（医院提供）</div>
+            <ul class="bullet-list" style="font-size:0.76vw;">
+              <li>专业临床医生/护士团队</li>
+              <li>海量稳定真实患者源</li>
+              <li>医疗牌照背书与处方权</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="font-size:0.85vw;font-weight:700;color:#1a6b4a;margin:4px 0 2px;">合作三步走战略</div>
+        <div class="step-row" style="margin-bottom:3px;">
+          <div class="step-num" style="background:#3d9060;font-size:11px;">1</div>
+          <div class="step-content"><strong>单点打透（现在）：</strong>以抚矿总院肾内科为"试验田"，跑通出院扫码、医患互动、送液到家全流程</div>
+        </div>
+        <div class="step-row" style="margin-bottom:3px;">
+          <div class="step-num" style="background:#d4a017;font-size:11px;">2</div>
+          <div class="step-content"><strong>全院拓维（中期）：</strong>将系统扩展至抚矿总院的内分泌科、心内科，形成"全院级慢病管理平台"</div>
+        </div>
+        <div class="step-row">
+          <div class="step-num" style="background:#e8841a;font-size:11px;">3</div>
+          <div class="step-content"><strong>全网复制（未来）：</strong>形成《华润健康数字慢病SOP白皮书》，向华润健康旗下医疗机构全面推广</div>
+        </div>
+      </div>
+
+      <!-- 患者最活跃：外延式增长路线图 -->
+      <div style="display:flex;flex-direction:column;gap:0.7vh;overflow:hidden;">
+        <div style="background:linear-gradient(135deg,#d4a017,#e8b830);border-radius:10px;padding:8px 12px;color:white;">
+          <div style="font-size:1.1vw;font-weight:700;">患者最活跃 — 外延式增长</div>
+          <div style="font-size:0.78vw;opacity:0.9;">从"专科工具"到"无界生态"的 1 到 N 进化路线图</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:5px;flex:1;">
+          <div style="background:#f5fffe;border:1.5px solid #5ab08a;border-radius:8px;padding:8px 12px;font-size:0.8vw;">
+            <div style="font-weight:700;color:#1a6b4a;margin-bottom:3px;">🪨 基石期（深耕肾科）</div>
+            鹤护健康打透腹膜透析场景，完善产品底层架构与合规体系。
+          </div>
+          <div style="text-align:center;color:#5ab08a;font-size:1.2vw;line-height:1;">↓</div>
+          <div style="background:#f0faf5;border:1.5px solid #a8d8c0;border-radius:8px;padding:8px 12px;font-size:0.8vw;">
+            <div style="font-weight:700;color:#2d7a50;margin-bottom:3px;">🔀 向外兼并</div>
+            通过收购/入股外部成熟的"牌照方"或"流量方"（如前期盘点的鹫一健康等），快速吸纳非华润体系的外部患者。
+          </div>
+          <div style="text-align:center;color:#5ab08a;font-size:1.2vw;line-height:1;">↓</div>
+          <div style="background:#fff8e8;border:1.5px solid #f0d88a;border-radius:8px;padding:8px 12px;font-size:0.8vw;">
+            <div style="font-weight:700;color:#8a6010;margin-bottom:3px;">🌐 横向扩展（跨病种探索）</div>
+            依托双鹤现有优势药企资源，将"鹤护模式"平移，孵化"心血管管家"、"糖友管家"等新病种模块，实现从"单病种"到"泛慢病平台"的跨越。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="position:absolute;bottom:10px;right:60px;font-size:9px;color:rgba(26,107,74,0.5);font-style:italic;">打造中国处方药第一品牌 &nbsp; 打造合成生物标杆龙头企业</div>
+  <div class="slide-num">13</div>
+</div>
+
+<!-- ============================================
+     SLIDE 14 — 最聪明AI 四环模型
+============================================ -->
+<div class="slide content-slide" id="slide-14">
+  <div class="bg-top-strip"></div>
+  <div class="slide-header">
+    <span class="breadcrumb">平台总体战略</span>
+    <span class="sep">›</span>
+    <span class="slide-title">最聪明AI — 四环模型</span>
+  </div>
+  
+  <div class="body">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.9vw;height:88%;">
+      <!-- Ring 1 -->
+      <div class="ai-ring">
+        <div class="ring-num">01</div>
+        <div class="ring-title">第一环：智能基石 &nbsp; 「AI智能健康体」</div>
+        <div class="ring-sub">
+          嵌入「鹤护健康患者管理平台」<br>
+          ✦ 7x24小时患者数据监测，自动识别异常趋势，提前预警<br>
+          ✦ AI生成个性化饮食 &amp; 运动建议<br>
+          ✦ 实现"千人千面"的精准管理
+        </div>
+      </div>
+      
+      <!-- Ring 2 -->
+      <div class="ai-ring">
+        <div class="ring-num">02</div>
+        <div class="ring-title">第二环：诊疗提效 &nbsp; 「AI智能健康体」</div>
+        <div class="ring-sub">
+          辅助「互联网医院N家入驻」<br>
+          ✦ AI预处理患者信息，大幅提升接诊效率<br>
+          ✦ AI推荐匹配科室和医生，优化医疗资源匹配
+        </div>
+      </div>
+      
+      <!-- Ring 3 -->
+      <div class="ai-ring">
+        <div class="ring-num">03</div>
+        <div class="ring-title">第三环：商业智能 &nbsp; 「AI智能健康体」</div>
+        <div class="ring-sub">
+          驱动「润鹤智选电商平台」高转化<br>
+          ✦ 电商平台精准推送，30%高漏斗转化<br>
+          ✦ AI预测区域性产品需求变化<br>
+          ✦ AI优化库存管理 &amp; 预处理订单
+        </div>
+      </div>
+      
+      <!-- Ring 4 -->
+      <div class="ai-ring">
+        <div class="ring-num">04</div>
+        <div class="ring-title">第四环：线下智能 &nbsp; 「AI智能健康体」</div>
+        <div class="ring-sub">
+          优化线下履约与服务<br>
+          ✦ 智能仓网规划<br>
+          ✦ 同城优化配载线路，药品配送"最后一公里"<br>
+          ✦ 反哺线下销售
+        </div>
+      </div>
+    </div>
+    
+    <div style="background:linear-gradient(135deg,#1a6b4a,#2d8c60);border-radius:8px;padding:7px 14px;color:white;font-size:0.78vw;margin-top:6px;display:flex;gap:2vw;flex-wrap:wrap;">
+      <span>🧠 <strong>AI健康体"鹤小护"：</strong>从"被动抢救"到"主动守护"的转变</span>
+      <span>📡 <strong>7x24小时雷达：</strong>自动预警，防患于未然</span>
+      <span>🎯 <strong>个性化管家：</strong>千人千面的健康方案</span>
+    </div>
+  </div>
+  
+  <div style="position:absolute;bottom:10px;right:60px;font-size:9px;color:rgba(26,107,74,0.5);font-style:italic;">打造中国处方药第一品牌 &nbsp; 打造合成生物标杆龙头企业</div>
+  <div class="slide-num">14</div>
+</div>
+
+<!-- ============================================
+     SLIDE 15 — 商业价值闭环详情
+============================================ -->
+<div class="slide content-slide" id="slide-15">
+  <div class="bg-top-strip"></div>
+  <div class="slide-header">
+    <span class="breadcrumb">平台总体战略</span>
+    <span class="sep">›</span>
+    <span class="slide-title">商业价值闭环：让数据产生利润 — 构建数据驱动的精准营销飞轮</span>
+  </div>
+  
+  <div class="body">
+    <div style="display:flex;flex-direction:column;gap:1vh;height:100%;">
+      <!-- Flywheel visualization -->
+      <div style="display:grid;grid-template-columns:1fr 2px 1fr 2px 1fr;gap:0;height:60%;min-height:0;">
+        <!-- Data Pool -->
+        <div style="background:linear-gradient(160deg,#e8f5ee,#f5fffe);border:1.5px solid #c8e8d8;border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;">
+          <div style="font-size:1vw;font-weight:700;color:#1a6b4a;margin-bottom:2px;">患者数据资产池</div>
+          <ul class="bullet-list" style="font-size:0.78vw;">
+            <li>每日体重/血压变化</li>
+            <li>腹透液换液频率</li>
+            <li>历史订单数据</li>
+            <li>AI智能体搜索/问答热词</li>
+          </ul>
+        </div>
+        
+        <!-- Arrow -->
+        <div style="display:flex;align-items:center;justify-content:center;font-size:1.4vw;color:#1a6b4a;">→</div>
+        
+        <!-- AI Engine -->
+        <div style="background:linear-gradient(160deg,#1a6b4a,#2d8c60);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;color:white;">
+          <div style="font-size:1vw;font-weight:700;margin-bottom:2px;">AI算法引擎</div>
+          <div style="font-size:0.78vw;line-height:1.5;">
+            用户标签化：AI自动为患者打上动态标签<br>
+            ▸ "高价值患者"<br>
+            ▸ "即将断液患者"<br>
+            ▸ "营养不良预警患者"
+          </div>
+          <div style="font-size:0.75vw;opacity:0.85;margin-top:4px;">"金牌数字化医药代表"：让每一次关怀都带有精准的商业转化可能</div>
+        </div>
+        
+        <!-- Arrow -->
+        <div style="display:flex;align-items:center;justify-content:center;font-size:1.4vw;color:#1a6b4a;">→</div>
+        
+        <!-- Conversion -->
+        <div style="background:linear-gradient(160deg,#fff8e8,#fffdf0);border:1.5px solid #f0d88a;border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;">
+          <div style="font-size:1vw;font-weight:700;color:#8a6010;margin-bottom:2px;">精准营销转化</div>
+          <ul class="bullet-list" style="font-size:0.76vw;">
+            <li><strong>场景1（复购提醒）：</strong>快用完前3天，自动推送"一键复购/续方"链接</li>
+            <li><strong>场景2（交叉销售）：</strong>白蛋白指标偏低时，"健康周报"底部精准附带乳清蛋白粉优惠券</li>
+            <li><strong>场景3（高客单转化）：</strong>针对血压控制不佳患者，推送智能血压计（IoT）硬件升级套餐</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Ecosystem blueprint -->
+      <div style="background:#f0faf5;border:1px solid #c8e8d8;border-radius:8px;padding:8px 14px;font-size:0.82vw;">
+        <div style="font-size:0.95vw;font-weight:700;color:#1a6b4a;margin-bottom:5px;">我们的生态蓝图</div>
+        <div style="display:flex;gap:2vw;flex-wrap:wrap;">
+          <div><strong>模块化基石：</strong>功能像"乐高"一样灵活拼装。</div>
+          <div><strong>可复制路径：</strong>当前深耕腹透，未来已启动向糖尿病、高血压等慢病领域的快速拓展。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div style="position:absolute;bottom:10px;right:60px;font-size:9px;color:rgba(26,107,74,0.5);font-style:italic;">打造中国处方药第一品牌 &nbsp; 打造合成生物标杆龙头企业</div>
+  <div class="slide-num">15</div>
+</div>
+
+<!-- ============================================
+     SLIDE 16 — FINAL / THANK YOU
+============================================ -->
+<div class="slide" id="slide-final" style="background:linear-gradient(160deg,#ddf0e6 0%,#edf8f2 50%,#f8fffe 100%);display:flex;align-items:center;justify-content:center;">
+  <!-- Mountain background -->
+  <svg viewBox="0 0 500 280" preserveAspectRatio="xMinYMax meet" style="position:absolute;bottom:0;left:0;width:40%;height:50%;z-index:1;opacity:0.7;">
+    <defs><linearGradient id="fmg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5ab08a" stop-opacity="0.6"/><stop offset="100%" stop-color="#2d7a50" stop-opacity="0.9"/></linearGradient></defs>
+    <path d="M0,280 L0,180 L60,100 L120,160 L180,70 L250,140 L320,80 L400,150 L500,120 L500,280 Z" fill="#7dc4a0" opacity="0.4"/>
+    <path d="M0,280 L0,200 L80,120 L150,180 L220,100 L300,170 L400,130 L500,170 L500,280 Z" fill="url(#fmg)"/>
+    <rect x="0" y="255" width="500" height="25" fill="#a8d8c0" opacity="0.25"/>
+    <path d="M100,100 Q112,90 124,100 Q136,90 148,100" stroke="#2d7a50" stroke-width="2" fill="none" opacity="0.7"/>
+  </svg>
+  
+  <!-- City -->
+  <svg viewBox="0 0 600 320" preserveAspectRatio="xMaxYMax meet" style="position:absolute;bottom:0;right:0;width:50%;height:50%;z-index:2;opacity:0.8;">
+    <defs>
+      <linearGradient id="fb1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2d8c60"/><stop offset="100%" stop-color="#1a5a3a"/></linearGradient>
+      <linearGradient id="fb2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e8841a"/><stop offset="100%" stop-color="#b86010"/></linearGradient>
+    </defs>
+    <rect x="0" y="285" width="600" height="35" fill="#c8e8d0" opacity="0.5"/>
+    <rect x="270" y="60" width="55" height="225" fill="url(#fb1)"/>
+    <polygon points="270,60 297,18 325,60" fill="#1a6b4a"/>
+    <rect x="345" y="95" width="50" height="190" fill="url(#fb1)"/>
+    <rect x="410" y="125" width="45" height="160" fill="url(#fb2)"/>
+    <rect x="470" y="105" width="38" height="180" fill="url(#fb1)"/>
+    <rect x="520" y="145" width="35" height="140" fill="url(#fb2)"/>
+    <rect x="210" y="115" width="42" height="170" fill="url(#fb1)"/>
+    <rect x="155" y="145" width="38" height="140" fill="url(#fb1)"/>
+    <rect x="95" y="185" width="130" height="100" fill="#2d8c60"/>
+    <text x="160" y="222" text-anchor="middle" font-size="10" fill="white" font-family="Microsoft YaHei">华润双鹤</text>
+    <path d="M0,295 Q300,275 600,295" stroke="#8fc8a8" stroke-width="5" fill="none" opacity="0.4"/>
+    <path d="M440,48 Q452,40 464,48 Q476,40 488,48" stroke="#2d7a50" stroke-width="2" fill="none" opacity="0.5"/>
+  </svg>
+  
+  <!-- Content -->
+  <div style="text-align:center;z-index:5;position:relative;">
+    <div style="display:flex;gap:3vw;justify-content:center;margin-bottom:2.5vh;flex-wrap:wrap;">
+      <div style="font-size:1.8vw;font-weight:700;color:#1a6b4a;">打造中国处方药第一品牌</div>
+      <div style="font-size:1.8vw;font-weight:700;color:#d4a017;">打造合成生物标杆龙头企业</div>
+    </div>
+    <div style="font-size:2.8vw;font-weight:700;color:#1a3a2a;letter-spacing:8px;border-top:1px solid rgba(26,107,74,0.3);border-bottom:1px solid rgba(26,107,74,0.3);padding:12px 40px;margin-top:2vh;">
+      THANKS！
+    </div>
+  </div>
+  <div class="slide-num">16</div>
+</div>
+
+</div><!-- end slides-container -->
+</div><!-- end slides-wrapper -->
+
+<!-- Thumbnails panel -->
+<div class="thumbnails" id="thumbs">
+  <div class="thumb active" onclick="goTo(1)" id="t1">封面</div>
+  <div class="thumb" onclick="goTo(2)" id="t2">目录</div>
+  <div class="thumb" onclick="goTo(3)" id="t3">全景图</div>
+  <div class="thumb" onclick="goTo(4)" id="t4">举措一</div>
+  <div class="thumb" onclick="goTo(5)" id="t5">举措二(1)</div>
+  <div class="thumb" onclick="goTo(6)" id="t6">举措二(2)</div>
+  <div class="thumb" onclick="goTo(7)" id="t7">举措三</div>
+  <div class="thumb" onclick="goTo(8)" id="t8">举措四</div>
+  <div class="thumb" onclick="goTo(9)" id="t9">举措五</div>
+  <div class="thumb" onclick="goTo(10)" id="t10">战略目标(章)</div>
+  <div class="thumb" onclick="goTo(11)" id="t11">患者最多/活跃</div>
+  <div class="thumb" onclick="goTo(12)" id="t12">最聪明AI/商业闭环</div>
+  <div class="thumb" onclick="goTo(13)" id="t13">平台战略(章)</div>
+  <div class="thumb" onclick="goTo(14)" id="t14">内生×外延增长</div>
+  <div class="thumb" onclick="goTo(15)" id="t15">AI四环模型</div>
+  <div class="thumb" onclick="goTo(16)" id="t16">精准营销飞轮</div>
+  <div class="thumb" onclick="goTo(17)" id="t17">致谢</div>
+</div>
+
+<div class="hint" id="hint">← → 键翻页 &nbsp; F 全屏</div>
+
+<script>
+  let current = 1;
+  const total = 17;
+  
+  const slideIds = [
+    'slide-1','slide-2','slide-3','slide-4','slide-5','slide-6',
+    'slide-7','slide-8','slide-9','slide-10','slide-11','slide-11b',
+    'slide-12','slide-13','slide-14','slide-15','slide-final'
+  ];
+  
+  function goTo(n) {
+    if (n < 1 || n > total) return;
+    document.getElementById(slideIds[current-1]).classList.remove('active');
+    document.getElementById('t' + current).classList.remove('active');
+    current = n;
+    document.getElementById(slideIds[current-1]).classList.add('active');
+    document.getElementById('t' + current).classList.add('active');
+    document.getElementById('counter').textContent = current + ' / ' + total;
+    // Scroll thumbnail into view
+    document.getElementById('t' + current).scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+  }
+  
+  function nextSlide() { goTo(current + 1); }
+  function prevSlide() { goTo(current - 1); }
+  
+  let thumbsVisible = false;
+  function toggleThumbs() {
+    thumbsVisible = !thumbsVisible;
+    document.getElementById('thumbs').classList.toggle('show', thumbsVisible);
+  }
+  
+  // Keyboard navigation
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      nextSlide();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      prevSlide();
+    } else if (e.key === 'f' || e.key === 'F') {
+      toggleFullscreen();
+    } else if (e.key === 'Escape') {
+      if (thumbsVisible) toggleThumbs();
+    }
+  });
+  
+  // Fullscreen
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(()=>{});
+    } else {
+      document.exitFullscreen();
+    }
+  }
+  
+  // Touch swipe
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) { dx < 0 ? nextSlide() : prevSlide(); }
+  });
+  
+  // Show hint briefly
+  setTimeout(() => {
+    document.getElementById('hint').classList.add('show');
+    setTimeout(() => document.getElementById('hint').classList.remove('show'), 3000);
+  }, 1500);
+
+  // Click-to-advance handled by named slideClickHandler below
+
+
+  // ═══════════════════════════════════════════════════════════════
+  //  EDIT MODE ENGINE
+  // ═══════════════════════════════════════════════════════════════
+  let editMode = false;
+  let selectedBlock = null;
+  let undoStack = [];
+  let redoStack = [];
+  const MAX_UNDO = 50;
+
+  // ── Toggle edit mode ──────────────────────────────────────────
+  function toggleEditMode() {
+    editMode = !editMode;
+    document.body.classList.toggle('edit-mode', editMode);
+    const btn = document.getElementById('edit-toggle-btn');
+    btn.textContent = editMode ? '✅ 完成' : '✏️ 编辑';
+    btn.style.background = editMode
+      ? 'rgba(80,200,120,0.4)' : 'rgba(100,180,255,0.2)';
+
+    if (editMode) {
+      enableEditMode();
+    } else {
+      disableEditMode();
+    }
+  }
+
+  // ── Enable: make all text nodes contenteditable ───────────────
+  function enableEditMode() {
+    // Disable click-to-advance
+    document.querySelector('.slides-wrapper').removeEventListener('click', slideClickHandler);
+
+    // Make all text-bearing elements editable on current slide
+    activateSlideEditing(slideIds[current-1]);
+
+    // Save initial state for undo
+    pushUndo();
+  }
+
+  function disableEditMode() {
+    selectedBlock = null;
+    // Re-enable click-to-advance
+    document.querySelector('.slides-wrapper').addEventListener('click', slideClickHandler);
+  }
+
+  // Activate editing on a slide
+  function activateSlideEditing(slideId) {
+    const slide = document.getElementById(slideId);
+    if (!slide) return;
+
+    // Make all text-containing elements editable
+    const textSelectors = [
+      'p','span','div','li','h1','h2','h3','h4','strong','em',
+      '.card-title','.card-body','.section-title',
+      '.bullet-list li','.sub-bullet-list li',
+      '.step-content','.difficulty-box','.action-box',
+      '.slide-title','.breadcrumb','.ring-title','.ring-sub',
+      '.pathway-content','.pathway-label'
+    ];
+
+    // Walk all leaf-ish text nodes
+    const allEls = slide.querySelectorAll('*');
+    allEls.forEach(el => {
+      // Skip SVG, scripts, inputs, already editable
+      if (el.closest('svg') || el.tagName === 'SCRIPT' || el.tagName === 'STYLE') return;
+      if (el.contentEditable === 'true') return;
+
+      // Only make leaf-text elements editable (those with direct text)
+      const hasDirectText = Array.from(el.childNodes).some(
+        n => n.nodeType === 3 && n.textContent.trim().length > 0
+      );
+      if (hasDirectText) {
+        el.contentEditable = 'true';
+        el.setAttribute('data-editable','1');
+        el.addEventListener('focus', onEditableFocus);
+        el.addEventListener('blur', onEditableBlur);
+        el.addEventListener('input', onEditableInput);
+        el.addEventListener('keydown', onEditableKeydown);
+      }
+    });
+
+    // Add drag handles to block-level elements
+    addDragHandles(slide);
+  }
+
+  // ── Contenteditable focus/blur/input ─────────────────────────
+  function onEditableFocus(e) {
+    // Prevent slide navigation while editing
+    e.stopPropagation();
+  }
+  function onEditableBlur(e) {
+    pushUndo();
+  }
+  function onEditableInput(e) {
+    // Mark dirty
+  }
+  function onEditableKeydown(e) {
+    if (e.key === 'Enter' && !e.shiftKey && e.target.tagName !== 'DIV' && e.target.tagName !== 'P') {
+      // For inline elements, prevent newline
+      e.preventDefault();
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undoEdit(); }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redoEdit(); }
+    e.stopPropagation(); // Prevent slide navigation
+  }
+
+  // ── execCommand wrapper ───────────────────────────────────────
+  function execFmt(cmd, val) {
+    document.execCommand(cmd, false, val || null);
+  }
+
+  // ── Drag-to-move for block elements ──────────────────────────
+  function addDragHandles(slide) {
+    // Block-level draggable elements: cards, step-rows, sections, etc.
+    const blockSelectors = [
+      '.card','.info-card','.step-row','.strategy-card',
+      '.ai-ring','.pathway-row','.difficulty-box','.action-box',
+      '.support-box','.compliance-row','.card-title',
+      // Also any direct children of .body or .two-col columns
+      '.body > div', '.body > *',
+      '[style*="display:grid"] > div',
+      '[style*="display:flex"] > div'
+    ].join(',');
+
+    slide.querySelectorAll(blockSelectors).forEach(el => {
+      if (el.closest('svg')) return;
+      if (el.dataset.block) return; // Already set
+      el.dataset.block = '1';
+      makeDraggable(el);
+      
+      // Add action bar
+      if (!el.querySelector('.block-actions')) {
+        const bar = document.createElement('div');
+        bar.className = 'block-actions';
+        bar.innerHTML = `
+          <button class="block-action-btn" onclick="duplicateBlock(this)" title="复制">⊕ 复制</button>
+          <button class="block-action-btn" onclick="deleteBlock(this)" title="删除" style="color:#ff9090;">✕</button>
+          <button class="block-action-btn" title="上移" onclick="moveBlock(this,-1)">↑</button>
+          <button class="block-action-btn" title="下移" onclick="moveBlock(this,1)">↓</button>
+        `;
+        el.style.position = 'relative';
+        el.insertBefore(bar, el.firstChild);
+      }
+    });
+  }
+
+  // ── Drag implementation ───────────────────────────────────────
+  let dragEl = null, dragClone = null;
+  let dragOffX = 0, dragOffY = 0;
+  let dragStartParent = null, dragStartNext = null;
+
+  function makeDraggable(el) {
+    el.addEventListener('mousedown', startDrag, { passive: false });
+  }
+
+  function startDrag(e) {
+    if (!editMode) return;
+    // Only drag from the element itself, not from contenteditable children
+    if (e.target.contentEditable === 'true' || e.target.closest('[contenteditable="true"]')) return;
+    if (e.target.classList.contains('block-action-btn') || e.target.closest('.block-actions')) return;
+    if (e.button !== 0) return;
+
+    dragEl = e.currentTarget;
+    dragEl.classList.add('dragging');
+
+    const rect = dragEl.getBoundingClientRect();
+    dragOffX = e.clientX - rect.left;
+    dragOffY = e.clientY - rect.top;
+
+    dragStartParent = dragEl.parentNode;
+    dragStartNext = dragEl.nextSibling;
+
+    // Create floating clone
+    dragClone = dragEl.cloneNode(true);
+    dragClone.style.cssText = `
+      position:fixed; left:${rect.left}px; top:${rect.top}px;
+      width:${rect.width}px; height:${rect.height}px;
+      z-index:9999; opacity:0.85; pointer-events:none;
+      box-shadow:0 12px 40px rgba(0,0,0,0.4);
+      transform:rotate(1deg); transition:none;
+    `;
+    document.body.appendChild(dragClone);
+
+    // Ghost placeholder
+    dragEl.style.opacity = '0.25';
+
+    document.addEventListener('mousemove', onDragMove, { passive: false });
+    document.addEventListener('mouseup', endDrag);
+    e.preventDefault();
+  }
+
+  function onDragMove(e) {
+    if (!dragClone) return;
+    dragClone.style.left = (e.clientX - dragOffX) + 'px';
+    dragClone.style.top  = (e.clientY - dragOffY) + 'px';
+
+    // Find drop target
+    dragClone.style.display = 'none';
+    const target = document.elementFromPoint(e.clientX, e.clientY);
+    dragClone.style.display = '';
+
+    if (target && target !== dragEl) {
+      const dropParent = target.closest('[data-block]') || target.closest('.body > *') || target.closest('.two-col > div') || target.closest('.three-col > div');
+      if (dropParent && dropParent !== dragEl) {
+        document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+        dropParent.classList.add('drag-over');
+      }
+    }
+  }
+
+  function endDrag(e) {
+    document.removeEventListener('mousemove', onDragMove);
+    document.removeEventListener('mouseup', endDrag);
+    document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+
+    if (dragClone) { dragClone.remove(); dragClone = null; }
+    if (!dragEl) return;
+
+    dragEl.style.opacity = '';
+    dragEl.classList.remove('dragging');
+
+    // Find drop target
+    const target = document.elementFromPoint(e.clientX, e.clientY);
+    if (target && target !== dragEl) {
+      const dropZone = target.closest('.body > div, .two-col > div, .three-col > div, .body');
+      const dropBlock = target.closest('[data-block]');
+
+      if (dropBlock && dropBlock !== dragEl) {
+        // Swap or insert before
+        const dpParent = dropBlock.parentNode;
+        const dpNext = dropBlock.nextSibling;
+        if (dragStartParent === dpParent) {
+          // Same parent: swap
+          dragStartParent.insertBefore(dragEl, dropBlock);
+          if (dragStartNext) dpParent.insertBefore(dropBlock, dragStartNext);
+          else dpParent.appendChild(dropBlock);
+        } else {
+          dpParent.insertBefore(dragEl, dropBlock);
+        }
+        pushUndo();
+      } else if (dropZone && dropZone !== dragEl && !dropZone.contains(dragEl)) {
+        dropZone.appendChild(dragEl);
+        pushUndo();
+      }
+    }
+
+    dragEl = null;
+  }
+
+  // ── Block actions ─────────────────────────────────────────────
+  function getBlockFromBtn(btn) {
+    return btn.closest('[data-block]');
+  }
+
+  function duplicateBlock(btn) {
+    const block = getBlockFromBtn(btn);
+    if (!block) return;
+    pushUndo();
+    const clone = block.cloneNode(true);
+    block.parentNode.insertBefore(clone, block.nextSibling);
+    makeDraggable(clone);
+  }
+
+  function deleteBlock(btn) {
+    const block = getBlockFromBtn(btn);
+    if (!block) return;
+    pushUndo();
+    block.remove();
+  }
+
+  function moveBlock(btn, dir) {
+    const block = getBlockFromBtn(btn);
+    if (!block) return;
+    pushUndo();
+    if (dir === -1 && block.previousElementSibling) {
+      block.parentNode.insertBefore(block, block.previousElementSibling);
+    } else if (dir === 1 && block.nextElementSibling) {
+      block.parentNode.insertBefore(block.nextElementSibling, block);
+    }
+  }
+
+  function deleteSelectedBlock() {
+    if (selectedBlock) { pushUndo(); selectedBlock.remove(); selectedBlock = null; }
+  }
+
+  // ── Insert new block ──────────────────────────────────────────
+  function addBlock() {
+    document.getElementById('add-panel').style.display = 'block';
+  }
+  function closeAddPanel() {
+    document.getElementById('add-panel').style.display = 'none';
+  }
+
+  const blockTemplates = {
+    text: `<div data-block="1" style="background:white;border:1px solid #c8e8d8;border-radius:8px;padding:10px 14px;position:relative;margin:6px 0;">
+             <div class="block-actions"></div>
+             <div contenteditable="true" data-editable="1" style="font-size:0.9vw;color:#1a3a2a;line-height:1.6;">在此输入文字内容...</div>
+           </div>`,
+    card:  `<div data-block="1" class="card" style="position:relative;margin:6px 0;">
+              <div class="block-actions"></div>
+              <div class="card-title" contenteditable="true" data-editable="1">卡片标题</div>
+              <div class="card-body" contenteditable="true" data-editable="1">在此输入卡片内容...</div>
+            </div>`,
+    title: `<div data-block="1" style="position:relative;margin:6px 0;">
+              <div class="block-actions"></div>
+              <div class="section-title" contenteditable="true" data-editable="1">新标题</div>
+            </div>`,
+    list:  `<div data-block="1" style="position:relative;margin:6px 0;">
+              <div class="block-actions"></div>
+              <ul class="bullet-list">
+                <li contenteditable="true" data-editable="1">列表项一</li>
+                <li contenteditable="true" data-editable="1">列表项二</li>
+                <li contenteditable="true" data-editable="1">列表项三</li>
+              </ul>
+            </div>`,
+    note:  `<div data-block="1" class="difficulty-box" style="position:relative;margin:6px 0;">
+              <div class="block-actions"></div>
+              <span contenteditable="true" data-editable="1">💡 备注：在此输入备注内容</span>
+            </div>`,
+    divider:`<div data-block="1" style="position:relative;margin:8px 0;">
+               <div class="block-actions"></div>
+               <hr style="border:none;border-top:1.5px solid #c8e8d8;margin:4px 0;"/>
+             </div>`
+  };
+
+  function insertBlock(type) {
+    closeAddPanel();
+    const slide = document.getElementById(slideIds[current-1]);
+    if (!slide) return;
+    pushUndo();
+
+    const body = slide.querySelector('.body') || slide;
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = blockTemplates[type] || blockTemplates.text;
+    const newBlock = wrapper.firstElementChild;
+
+    // Setup block actions
+    const bar = newBlock.querySelector('.block-actions');
+    if (bar) {
+      bar.innerHTML = `
+        <button class="block-action-btn" onclick="duplicateBlock(this)">⊕ 复制</button>
+        <button class="block-action-btn" onclick="deleteBlock(this)" style="color:#ff9090;">✕</button>
+        <button class="block-action-btn" onclick="moveBlock(this,-1)">↑</button>
+        <button class="block-action-btn" onclick="moveBlock(this,1)">↓</button>
+      `;
+    }
+
+    // Make text editable
+    newBlock.querySelectorAll('[data-editable]').forEach(el => {
+      el.contentEditable = 'true';
+      el.addEventListener('focus', onEditableFocus);
+      el.addEventListener('blur', onEditableBlur);
+      el.addEventListener('input', onEditableInput);
+      el.addEventListener('keydown', onEditableKeydown);
+    });
+
+    makeDraggable(newBlock);
+    body.appendChild(newBlock);
+
+    // Focus the first editable
+    const firstEdit = newBlock.querySelector('[contenteditable]');
+    if (firstEdit) { firstEdit.focus(); selectAll(firstEdit); }
+  }
+
+  function selectAll(el) {
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  // ── Undo / Redo ───────────────────────────────────────────────
+  function getSlideSnapshot(slideId) {
+    const el = document.getElementById(slideId);
+    return el ? el.innerHTML : '';
+  }
+
+  function pushUndo() {
+    const snap = {};
+    slideIds.forEach(id => { snap[id] = getSlideSnapshot(id); });
+    undoStack.push(snap);
+    if (undoStack.length > MAX_UNDO) undoStack.shift();
+    redoStack = [];
+    updateUndoCounter();
+  }
+
+  function undoEdit() {
+    if (undoStack.length < 2) return;
+    // Push current to redo
+    const cur = {};
+    slideIds.forEach(id => { cur[id] = getSlideSnapshot(id); });
+    redoStack.push(cur);
+    undoStack.pop();
+    const snap = undoStack[undoStack.length - 1];
+    restoreSnapshot(snap);
+    updateUndoCounter();
+  }
+
+  function redoEdit() {
+    if (!redoStack.length) return;
+    const snap = redoStack.pop();
+    pushUndo();
+    restoreSnapshot(snap);
+    updateUndoCounter();
+  }
+
+  function restoreSnapshot(snap) {
+    slideIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && snap[id] !== undefined) el.innerHTML = snap[id];
+    });
+    // Re-enable editing after restore
+    if (editMode) {
+      activateSlideEditing(slideIds[current-1]);
+    }
+  }
+
+  function updateUndoCounter() {
+    const el = document.getElementById('undo-counter');
+    if (el) el.textContent = undoStack.length > 1 ? `(${undoStack.length-1})` : '';
+  }
+
+  // ── Save / Export ─────────────────────────────────────────────
+  function saveHTML() {
+    // Remove all edit-mode attributes before saving
+    const clone = document.documentElement.cloneNode(true);
+
+    // Remove contenteditable and data-editable attrs
+    clone.querySelectorAll('[contenteditable]').forEach(el => {
+      el.removeAttribute('contenteditable');
+    });
+    clone.querySelectorAll('[data-editable]').forEach(el => {
+      el.removeAttribute('data-editable');
+    });
+    // Remove block-actions divs from export
+    clone.querySelectorAll('.block-actions').forEach(el => el.remove());
+    // Remove data-block
+    clone.querySelectorAll('[data-block]').forEach(el => {
+      el.removeAttribute('data-block');
+    });
+    // Remove edit toolbar and hint
+    const toolbar = clone.querySelector('#edit-toolbar');
+    if (toolbar) toolbar.remove();
+    const hint = clone.querySelector('#edit-hint');
+    if (hint) hint.remove();
+    const panel = clone.querySelector('#add-panel');
+    if (panel) panel.remove();
+
+    const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+    const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '鹤护健康2026汇报_编辑版.html';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ── Context menu ──────────────────────────────────────────────
+  document.addEventListener('contextmenu', function(e) {
+    if (!editMode) return;
+    const block = e.target.closest('[data-block]');
+    if (!block) return;
+    e.preventDefault();
+
+    // Simple context menu
+    const existing = document.getElementById('ctx-menu');
+    if (existing) existing.remove();
+
+    const menu = document.createElement('div');
+    menu.id = 'ctx-menu';
+    menu.style.cssText = `position:fixed;left:${e.clientX}px;top:${e.clientY}px;
+      background:#1e2a4a;border:1px solid rgba(255,255,255,0.2);border-radius:8px;
+      padding:6px;z-index:9999;min-width:140px;box-shadow:0 8px 24px rgba(0,0,0,0.4);`;
+    
+    const items = [
+      ['⊕ 复制模块', () => { pushUndo(); const c = block.cloneNode(true); block.parentNode.insertBefore(c, block.nextSibling); makeDraggable(c); }],
+      ['✕ 删除模块', () => { pushUndo(); block.remove(); }],
+      ['↑ 上移', () => { pushUndo(); if(block.previousElementSibling) block.parentNode.insertBefore(block, block.previousElementSibling); }],
+      ['↓ 下移', () => { pushUndo(); if(block.nextElementSibling) block.parentNode.insertBefore(block.nextElementSibling, block); }],
+      ['🔤 加粗文字', () => execFmt('bold')],
+      ['📋 复制文字', () => document.execCommand('copy')],
+    ];
+
+    items.forEach(([label, action]) => {
+      const item = document.createElement('div');
+      item.textContent = label;
+      item.style.cssText = 'color:white;padding:6px 12px;border-radius:5px;cursor:pointer;font-size:12px;';
+      item.addEventListener('mouseenter', () => item.style.background = 'rgba(255,255,255,0.15)');
+      item.addEventListener('mouseleave', () => item.style.background = '');
+      item.addEventListener('click', () => { action(); menu.remove(); });
+      menu.appendChild(item);
+    });
+
+    document.body.appendChild(menu);
+    document.addEventListener('click', () => menu.remove(), { once: true });
+  });
+
+  // Override keyboard shortcuts in edit mode
+  document.addEventListener('keydown', function(e) {
+    if (!editMode) return;
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undoEdit(); }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redoEdit(); }
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveHTML(); }
+  }, true);
+
+  // Store reference to slide click handler for removal
+  function slideClickHandler(e) {
+    if (e.target.closest('button') || e.target.closest('.nav')) return;
+    nextSlide();
+  }
+
+  // Replace the anonymous click listener with named one
+  document.querySelector('.slides-wrapper').addEventListener('click', slideClickHandler);
+
+</script>
+
+</body>
+</html>
